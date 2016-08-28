@@ -1,0 +1,16 @@
+.global-actions{
+	vertical-align: middle;
+	width: 100%;
+	line-height: 40px;
+	padding: 40px 10px;
+	box-sizing:border-box;
+	.search-box{
+		float: left;
+	}
+	.file-btn-group{
+		width: 40%;
+		float: right;
+		padding-top: 15px;
+	}
+
+}
