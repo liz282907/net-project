@@ -1,16 +1,107 @@
-.global-actions{
-	vertical-align: middle;
-	width: 100%;
-	line-height: 40px;
-	padding: 40px 10px;
-	box-sizing:border-box;
-	.search-box{
-		float: left;
-	}
-	.file-btn-group{
-		width: 40%;
-		float: right;
-		padding-top: 15px;
-	}
+/*********************variables***********************/
 
+$panel-margin: 30px;
+$center-margin: 10px;
+
+
+
+
+/*********************universal style***********************/
+.active {
+    background-color: #42b983;
+    color: #fff;
 }
+.center-parent{
+	display: flex;
+	margin-left: $center-margin;
+}
+.center-child{
+	flex:1;
+	margin-left: $center-margin;
+}
+
+
+
+/*********************custome style***********************/
+.global-actions {
+    vertical-align: middle;
+    width: 100%;
+    line-height: 40px;
+    padding: 40px 10px;
+    box-sizing: border-box;
+    .search-box {
+        float: left;
+    }
+    .file-btn-group {
+        width: 40%;
+        float: right;
+        padding-top: 15px;
+    }
+}
+
+.form-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    .action-button {
+        border: 1px solid #42b983;
+        border-radius: 3px;
+        font: 14px "simHei";
+        padding: 8px 20px;
+        display: inline-block;
+        &:hover {
+            background-color: #eee;
+        }
+        &:focus {
+            background-color: #42b983;
+            color: #fff;
+        }
+    }
+}
+
+.title-panels {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-left: $panel-margin;
+}
+
+.panel {
+    flex: 1;
+    min-width: 40%;
+    display: inline-block;
+    box-sizing: border-box;
+    .panel-heading{
+		input[type="checkbox"]{
+			border:#fff;
+		}
+    }
+    h3{
+		display: inline-block;
+    }
+    .filter-radios{
+    	@extend .center-parent;
+    	.radio-item{
+    		@extend .center-child;
+    	}
+    }
+    .keywords{
+    	position: relative;
+    	.more{
+    		position: absolute;
+    	}
+    }
+}
+
+
+.panel+.panel {
+    margin-left: $panel-margin;
+}
+
+.panel:nth-child(2n-1) {
+    margin-left: -$panel-margin;
+}
+
+
+

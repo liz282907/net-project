@@ -7,3 +7,14 @@
 
 2,sass 
 安装sass-loader, node-sass
+
+3, vue-resource
+
+- 配置webpack  
+```
+var Vue = require('vue');
+var VueResource = require('vue-resource');
+
+Vue.use(VueResource);
+```
+- 在组件的ready生命周期中进行ajax请求

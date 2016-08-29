@@ -9,3 +9,27 @@
         <button class="btn btn-default">批量导出</button>
         <button class="btn btn-default">批量删除</button>
       </div>
+
+
+      .panel{
+    @include flex-panel(30px);
+    flex:1;
+    min-width: 40%;
+    display: inline-block;
+    box-sizing:border-box;
+}
+.panel+.panel{
+    margin-left: 30px;
+}
+.panel:nth-child(2n-1){
+    margin-left: -30px;
+}
+
+              <div class="radio-item">
+                <input type="radio" value="1" v-model="duration"/>
+                <label for="jack">一天</label>
+              </div>
+              <div class="radio-item">
+                <input type="radio" value="7" v-model="duration"/>
+                <label for="jack">一周</label>
+              </div>
