@@ -1,0 +1,57 @@
+@import "../../assets/stylesheets/variables.scss";
+
+.table{
+    width: 80%;
+    margin: 20px auto;
+    th,td{
+        padding: 4px 10px;
+        text-align: center;
+    }
+    th{
+        height: 30px;
+        text-align: center;
+    }
+}
+
+
+.search{
+    position: relative;
+    margin: 0 1%;
+    width: 40%;
+    &:before{
+        content:"";
+        position: absolute;
+        top:0;
+        left: 10px;
+        width: 16px;
+        height: 16px;
+        background-image: url(../../assets/images/search.png);
+    }
+}
+.modal{
+    display: block;
+}
+
+
+.my-table{
+    @extend .table;
+    height: 30px;
+    overflow: auto;
+    th {
+        background-color: $base-color;
+        color: white;
+    }
+    tr:hover {background-color: $table-hover}
+    tr:nth-child(even){background-color: $table-even}
+    td:nth-child(even){
+        color:$base-color;
+    }
+    tbody{
+        height: 60px;
+        overflow: auto;
+    }
+    .edit{
+        cursor: pointer;
+    }
+
+}

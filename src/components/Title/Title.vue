@@ -61,6 +61,8 @@
         </div>
       </div>
 
+      <modal category="禁发" order="freq"></modal>
+
 
   </div>
 </template>
@@ -68,6 +70,7 @@
 <script>
 
 import Card from "../Card/Card";
+import PopModal from "../PopModal/PopModal";
 
 let checkboxWords = ["high danger","forbidden words","check words","low danger","issued words"];
 let cardList = [
@@ -79,7 +82,8 @@ let cardList = [
 export default {
 
   components:{
-    "card":Card
+    "card":Card,
+    "modal":PopModal
   },
 
   data () {

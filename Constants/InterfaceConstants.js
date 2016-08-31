@@ -4,4 +4,5 @@ var interfaceTransform = {
 		"check words":"auditedWords",
 		"low danger":"lowDangerWords"
 }
+var pageSize = 20;
 export {interfaceTransform};

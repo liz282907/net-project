@@ -28,7 +28,7 @@
 
 <script>
 
-import {interfaceTransform} from "../../../Constants/InterfaceConstants.js";
+import {interfaceTransform,pageSize} from "../../../Constants/InterfaceConstants.js";
 // import {interfaceTransform} from "../../utils/InterfaceConstants.js";
 export default {
 
@@ -61,7 +61,7 @@ export default {
 
     fetchData(params={},callback){
       let defaultParams = {
-        pageSize:20,
+        pageSize:pageSize,
         pageIndex:1,
         category: this.category,
         orderBy: this.order,
