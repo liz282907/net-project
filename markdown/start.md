@@ -18,3 +18,15 @@ var VueResource = require('vue-resource');
 Vue.use(VueResource);
 ```
 - 在组件的ready生命周期中进行ajax请求
+
+4, readFileSync 要进行json.parse解析
+
+5,使用组件时需要在外部进行注册
+```
+//App.js
+  components:{
+    Card
+  },
+```
+
+6, 访问属性不要忘了this.....总是记不住...

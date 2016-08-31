@@ -33,3 +33,67 @@
                 <input type="radio" value="7" v-model="duration"/>
                 <label for="jack">一周</label>
               </div>
+
+
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <input type="checkbox" value="check words" v-model="checkedWords" />
+          <h3 class="panel-title">审核</h3>
+        </div>
+        <div class="panel-body">
+          <div class="filter-radios">
+              <div class="radio-item">
+                <input type="radio" id="" value="frequency" v-model="audit" checked/>
+                <label >按热度</label>
+              </div>
+
+              <div class="radio-item">
+                <input type="radio" value="date" v-model="audit"/>
+                <label >按时间</label>
+              </div>
+            </div>
+            <div class="keywords">
+                <ul>
+                    <li v-for="keyword in auditedWords" class="tag">
+                        <span class="label label-default" >{{keyword}}</span>
+                    </li>
+                </ul>
+                <div class="btn-group">
+                  <button class="more" @click="showDetail">查看详情</button>
+                  <button class="add" @click="">添加词汇</button>
+                </div>
+
+            </div>
+        </div>
+      </div>
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <input type="checkbox" value="low danger" v-model="checkedWords" />
+          <h3 class="panel-title">低危</h3>
+        </div>
+        <div class="panel-body">
+          <div class="filter-radios">
+              <div class="radio-item">
+                <input type="radio" id="" value="frequency" v-model="lowDanger" checked/>
+                <label for="jack">按热度</label>
+              </div>
+
+              <div class="radio-item">
+                <input type="radio" value="date" v-model="lowDanger"/>
+                <label for="jack">按时间</label>
+              </div>
+            </div>
+            <div class="keywords">
+                <ul>
+                    <li v-for="keyword in lowDangerWords" class="tag">
+                        <span class="label label-default" >{{keyword}}</span>
+                    </li>
+                </ul>
+                <div class="btn-group">
+                  <button class="more" @click="showDetail">查看详情</button>
+                  <button class="add" @click="">添加词汇</button>
+                </div>
+
+            </div>
+        </div>
+      </div>

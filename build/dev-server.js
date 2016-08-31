@@ -7,7 +7,7 @@ var webpackConfig = process.env.NODE_ENV === 'testing'
   ? require('./webpack.prod.conf')
   : require('./webpack.dev.conf')
 
-var fs = requests("fs");
+var fs = require("fs");
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
@@ -59,10 +59,9 @@ var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsS
 app.use(staticPath, express.static('./static'))
 
 app.get("/title",function(req,res){
-    var titleWords = fs.readFileSync("./mock/title.json");
+    var titleWords = JSON.parse(fs.readFileSync("./mock/title.json"));
     res.json(titleWords);
-
-})
+});
 
 
 

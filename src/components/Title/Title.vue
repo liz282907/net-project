@@ -32,7 +32,7 @@
           </div>
           <div class="keywords">
             <ul>
-            <li v-for="keyword in highDanger">
+            <li v-for="keyword in highDanger" class="tag">
                 <span class="label">{{keyword}}</span>
             </li>
             </ul>
@@ -41,90 +41,16 @@
           </div>
         </div>
       </div>
-      <div class="panel panel-success">
+
+      <div class="panel panel-success" v-for="tempCard in cardList">
         <div class="panel-heading">
-          <input type="checkbox" value="forbidden words" v-model="checkedWords"/>
-          <h3 class="panel-title">禁发</h3>
+          <input type="checkbox" :value="tempCard.category" v-model="checkedWords"/>
+          <h3 class="panel-title">{{tempCard.title}}</h3>
         </div>
-        <div class="panel-body">
-            <div class="filter-radios">
-              <div class="radio-item">
-                <input type="radio" id="" value="frequency" v-model="forbidden"/>
-                <label >按热度</label>
-              </div>
-
-              <div class="radio-item">
-                <input type="radio" value="date" v-model="forbidden"/>
-                <label >按时间</label>
-              </div>
-            </div>
-            <div class="keywords">
-                <ul>
-                    <li v-for="keyword in forbiddenWords | orderBy 'freq' ">
-                        <span class="label" @dblclick="changeToEdit">{{keyword.value}}</span>
-                    </li>
-                </ul>
-                <button class="more">查看详情</button>
-
-            </div>
-        </div>
+        <card :category="tempCard.category"></card>
       </div>
-      <div class="panel panel-success">
-        <div class="panel-heading">
-          <input type="checkbox" value="check words" v-model="checkedWords"/>
-          <h3 class="panel-title">审核</h3>
-        </div>
-        <div class="panel-body">
-          <div class="filter-radios">
-              <div class="radio-item">
-                <input type="radio" id="" value="frequency" v-model="audit"/>
-                <label >按热度</label>
-              </div>
 
-              <div class="radio-item">
-                <input type="radio" value="date" v-model="audit"/>
-                <label >按时间</label>
-              </div>
-            </div>
-            <div class="keywords">
-                <ul>
-                    <li v-for="keyword in auditedWords | orderBy 'freq' ">
-                        <span class="label" @dblclick="changeToEdit">{{keyword.value}}</span>
-                    </li>
-                </ul>
-                <button class="more">修改保存</button>
 
-            </div>
-        </div>
-      </div>
-      <div class="panel panel-success">
-        <div class="panel-heading">
-          <input type="checkbox" value="low danger" v-model="checkedWords"/>
-          <h3 class="panel-title">低危</h3>
-        </div>
-        <div class="panel-body">
-          <div class="filter-radios">
-              <div class="radio-item">
-                <input type="radio" id="" value="frequency" v-model="lowDanger"/>
-                <label for="jack">按热度</label>
-              </div>
-
-              <div class="radio-item">
-                <input type="radio" value="date" v-model="lowDanger"/>
-                <label for="jack">按时间</label>
-              </div>
-            </div>
-            <div class="keywords">
-                <ul>
-                    <li v-for="keyword in lowDangerWords | orderBy 'freq' ">
-                        <span class="label" @dblclick="changeToEdit">{{keyword.value}}</span>
-                    </li>
-                </ul>
-                <button class="more">修改保存</button>
-
-            </div>
-        </div>
-      </div>
       <div class="panel panel-success">
         <div class="panel-heading">
           <input type="checkbox" value="issued words" v-model="checkedWords" />
@@ -141,23 +67,46 @@
 
 <script>
 
-let checkboxWords = ["high danger","forbidden words","check words","low danger","issued words"];
+import Card from "../Card/Card";
 
+let checkboxWords = ["high danger","forbidden words","check words","low danger","issued words"];
+let cardList = [
+  {title:"禁发",category:"forbidden words"},
+  {title:"审核",category:"check words"},
+  {title:"低危",category:"low danger"},
+];
 
 export default {
+
+  components:{
+    "card":Card
+  },
+
   data () {
+
     let duraionList = [
         {name:"halfHour",value:0.5,zh_value:"12小时"},
         {name:"oneDay",value:1,zh_value:"1天"},
         {name:"oneWeek",value:7,zh_value:"一周"},
       ];
     return {
+      duration:[],
+      cardList:cardList,
       duraionList:duraionList,
 
       checkedWords:[], //多选框结果
     }
   },
+
+  ready () {
+
+    //留作高危敏感词的接口
+
+
+    },
+
   methods:{
+
     //全选
     chooseAll(){
       if(this.checkedWords.length==checkboxWords.length)
@@ -169,7 +118,8 @@ export default {
       this.checkedWords = checkboxWords.filter((word)=>{
         return this.checkedWords.indexOf(word)===-1;
       });
-    }
+    },
+
   }
 }
 </script>
