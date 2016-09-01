@@ -3,8 +3,9 @@ var interfaceTransform = {
 	"forbidden words":"forbiddenWords",
 		"check words":"auditedWords",
 		"low danger":"lowDangerWords"
-}
+};
 var wordCount = {
 	"downPush words":10
-}
-export {interfaceTransform,wordCount};
+};
+var pageSize = 20;
+export {interfaceTransform,wordCount,pageSize};

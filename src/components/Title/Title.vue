@@ -57,7 +57,24 @@
           <h3 class="panel-title">下发词</h3>
         </div>
         <div class="panel-body">
-          Panel content
+            <div>
+              "审核"
+              <ul>
+                  <li v-for="keyword in childData['auditedWords']" class="tag">
+                      <span class="label label-default" >{{keyword}}</span>
+                  </li>
+              </ul>
+            </div>
+            <div>
+              "低危"
+              <ul>
+                  <li v-for="keyword in childData['lowDangerWords']" class="tag">
+                      <span class="label label-default" >{{keyword}}</span>
+                  </li>
+              </ul>
+            </div>
+
+
         </div>
       </div>
 
@@ -86,6 +103,7 @@ export default {
    // "modal":PopModal
   },
 
+
   data () {
 
     let duraionList = [
@@ -97,10 +115,19 @@ export default {
       duration:[],
       cardList:cardList,
       duraionList:duraionList,
+      childData:{},
 
       checkedWords:[], //多选框结果
     }
   },
+
+  events:{
+    "child-wordList":function(msg){
+            console.log("dispath ",msg);
+        this.childData = Object.assign({},this.childData,msg);
+    }
+  },
+
 
   ready () {
 
@@ -133,6 +160,10 @@ export default {
 @import "./Title.scss";
 h1 {
   color: #42b983;
+}
+.tag{
+      display: inline-block;
+        margin-left: 16px;
 }
 
 </style>

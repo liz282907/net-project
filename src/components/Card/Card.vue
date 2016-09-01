@@ -31,7 +31,7 @@
 
 <script>
 
-import {interfaceTransform,pageSize,wordCount} from "../../../Constants/InterfaceConstants.js";
+import {interfaceTransform,wordCount,pageSize} from "../../../Constants/InterfaceConstants.js";
 import PopModal from "../PopModal/PopModal";
 import PopDialog from "../PopDialog/PopDialog";
 export default {
@@ -62,7 +62,12 @@ export default {
         let category = interfaceTransform[this.category];
 
         this.wordList = data[category];
-        this.$dispatch("child-wordList",this.wordList.slice(wordCount["downPush words"]));
+        let length = wordCount["downPush words"];
+
+        this.$dispatch("child-wordList",
+            {
+              [category]:this.wordList.length<length?this.wordList:this.wordList.slice(length)
+            })
       });
 
 
