@@ -5,44 +5,48 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true" @click="closeModal">&times;</button>
-        <h4 class="modal-title">{{category}}</h4>
+        <h4 class="modal-title">{{title}}</h4>
       </div>
       <div class="modal-body">
-            <input type="text" class="my-search" placeholder="搜索">
-            <table class="my-table">
-            <thead>
-              <tr><th>关键词</th><th>操作</th></tr>
-            </thead>
-            <tbody>
-                <tr v-for="word in wordList">
+            <input type="text" class="my-search" placeholder="搜索"
+                @change="getfilteredWord" v-model="searchContent">
+            <div class="table-wrapper">
+                <table class="my-table">
+                    <thead>
+                      <tr><th>关键词</th><th>操作</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="word in wordList">
 
-                    <td v-if="!word.editing">{{word.content}}</td>
-                    <td v-else>
-                        <input class="editing-input" type="text"
-                            v-model="word.value"
-                            @blur="doneEdit($index)"
-                            @keyup.13="doneEdit($index)"/>
-                    </td>
-                    <td>
-                        <span class="action" @click="editWord(word)">修改 | </span>
-                        <span class="action" @click="removeWord(word)">删除</span>
-                    </td>
-                </tr>
-            </tbody>
+                            <td v-if="!word.editing">{{word.content}}</td>
+                            <td v-else>
+                                <input class="editing-input" type="text"
+                                    v-model="word.value"
+                                    @blur="doneEdit($index)"
+                                    @keyup.13="doneEdit($index)"/>
+                            </td>
+                            <td>
+                                <span class="action" @click="editWord(word)">修改 | </span>
+                                <span class="action" @click="removeWord(word)">删除</span>
+                            </td>
+                        </tr>
+                    </tbody>
 
-            </table>
+                </table>
+            </div>
+
             <div class="wordList">
 
             </div>
       </div>
       <div class="modal-footer">
         <ul class="pagination pagination-sm">
-            <li class="disabled"><a href="javascrpt:void(0)">&laquo;</a></li>
-            <li v-for="value in pageList" class="" @click="clickPage(value)">
+            <li class="pageList[0]===1?'disabled':''"><a href="javascrpt:void(0)" @click="changePagination(-1)">&laquo;</a></li>
+            <li v-for="value in pageList" :class="value===curPage?'active':''" @click="clickPage(value)">
                 <a href="javascrpt:void(0)">{{value}}</a>
             </li>
             <li><a href="javascrpt:void(0)">...</a></li>
-            <li><a href="javascrpt:void(0)">&raquo;</a></li>
+            <li><a href="javascrpt:void(0)" @click="changePagination(1)">&raquo;</a></li>
         </ul>
         <span class="input-wrapper">转到第
             <input type="number" min="1" :max="totalSize"
@@ -59,18 +63,21 @@
 
 import {interfaceTransform,pageSize} from "../../../Constants/InterfaceConstants.js";
 
+let sentRequest = {"get":null,"update":null,"delete":null,"patch":null};
 
 export default {
 
   name:"PopModal",
 
-  props:["category","order"],
+  props:["category","title","order","show"],
 
   data () {
 
     return {
-      show:true,
+      // show:show||false,
       toPage:1,
+      curPage:1,
+      searchContent:"",
       pageList:[1,2,3,4,5],
       wordList:["习近平","测试","测试2","测试3","测试21"].map(word=>{
         return {
@@ -86,6 +93,7 @@ export default {
         category:this.category,
         order:this.order
       };
+      this.clickPage(1);
       // this.fetchData(params,function(response){
       //   let data = response.json();
       //   let category = interfaceTransform[this.category];
@@ -112,11 +120,12 @@ export default {
         {
           params:data,
           before(request){
-            console.log("this ",this.previousRequest);
-            if(this.previousRequest){
-              this.previousRequest.abort();
+            // console.log("this ",this.previousRequest,sentRequest["get"]);
+            if(sentRequest["get"]){
+              sentRequest["get"].abort();
             }
-            this.previousRequest = request;
+            sentRequest["get"] =request;
+            // this.previousRequest = request;
           }
         })
           .then(callback,(err)=>{
@@ -128,12 +137,56 @@ export default {
 
     },
 
+    getfilteredWord(){
+        //searchContent
+        console.log("----------on change ",this.searchContent);
+        this.fetchData({
+          filter: this.searchContent
+        },(response)=>{
+            let data = response.json()[interfaceTransform[this.category]];
+            this.wordList = data.map(word=>{
+              return {
+                editing:false,value:word,content:word
+              }
+            });
+        });
+    },
+
     changePage(){
 
+      let toPage = parseInt(this.toPage);
+      this.pageList = [0,1,2,3,4].map(index=>{return toPage+index;});
+      this.curPage = toPage;
+      this.clickPage(toPage);
     },
 
     clickPage(page){
+      this.curPage = page;
+      //ajax
+      this.fetchData({pageIndex:page,filter:this.searchContent},(response)=>{
+        let data = response.json()[interfaceTransform[this.category]];
+        this.wordList = data.map(word=>{
+          return {
+            editing:false,value:word,content:word
+          }
+        });
 
+        let size;
+        if(size = response.json().totalSize)
+                this.totalSize = size;
+
+
+      });
+    },
+
+    changePagination(step){
+      //step:[1,-1]
+      if((step===-1 && this.pageList[0]===1)||(step===1 && this.pageList.slice(-1)===this.totalSize))
+        return;
+      this.pageList = this.pageList.map(page=>{
+        return page+step;
+      });
+      this.clickPage(this.curPage+step);
     },
 
     closeModal(){
@@ -142,6 +195,16 @@ export default {
 
     removeWord(word){
       this.wordList.$remove(word);
+      this.$http.post("/title",
+          {
+              category:this.category,
+              word:word,
+              action:"delete"
+          }).then((response)=>{
+              console.log("删除成功");
+          },(err)=>{
+              alert("删除失败");
+          })
       //delete ajax
     },
 
@@ -149,11 +212,37 @@ export default {
       word.editing = true;
     },
 
+    updateWord(prevWord,newWord){
+        this.$http.post("/title",{
+          category:this.category,
+          prevWord:prevWord,
+          newWord:newWord,
+          action:"patch"
+        },{
+                before(request){
+                    console.log("prev word ",this.previousRequest);
+                    // if(this.previousRequest&& (this.previousRequest.body.prevWord==request.body.prevWord)){
+                    //     this.previousRequest.abort();
+                    // }
+                    var prevUpdateRequest = sentRequest["update"];
+                    if(prevUpdateRequest && (prevUpdateRequest.body.prevWord==request.body.prevWord)){
+                        prevUpdateRequest.abort();
+                    }
+                    sentRequest["update"] =request;
+                    // this.previousRequest = request;
+                }
+          }).then(response=>{
+            console.log("更新成功");
+        },err=> alert("更新失败"))
+    },
+
     doneEdit(index){
+        let prevWord = this.wordList[index].content;
         let tempMsg = this.wordList[index].value;
         this.wordList[index].content = tempMsg;
         this.wordList[index].editing = false;
         // word.editing = false;
+        this.updateWord(prevWord,tempMsg);
     },
 
 

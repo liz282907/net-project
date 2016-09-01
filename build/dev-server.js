@@ -63,6 +63,11 @@ app.get("/title",function(req,res){
     res.json(titleWords);
 });
 
+app.post("/title",function(req,res){
+    var titleWords = JSON.stringify({"msg":"success"});
+    res.json(titleWords);
+});
+
 
 
 

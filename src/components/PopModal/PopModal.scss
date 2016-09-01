@@ -54,6 +54,7 @@ custom style
 }
 .modal{
     display: block;
+    background-color: rgba(11, 11, 11, 0.6);
     .action{
         cursor: pointer;
     }
@@ -70,17 +71,21 @@ custom style
     }
 }
 
-
+.table-wrapper{
+    height: 200px;
+    overflow: auto;
+}
 .my-table{
     @extend .table;
-    height: 30px;
+    height: 100px;
     overflow: auto;
     th {
         background-color: $base-color;
         color: white;
     }
     tbody{
-        height: 60px;
+        // display: block;
+        height: 100px;
         overflow: auto;
     }
     tr:hover {background-color: $table-hover}

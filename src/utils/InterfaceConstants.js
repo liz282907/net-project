@@ -4,4 +4,7 @@ var interfaceTransform = {
 		"check words":"auditedWords",
 		"low danger":"lowDangerWords"
 }
-export {interfaceTransform};
+var wordCount = {
+	"downPush words":10
+}
+export {interfaceTransform,wordCount};

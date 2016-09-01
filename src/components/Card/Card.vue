@@ -23,24 +23,35 @@
                 </div>
 
             </div>
+            <modal :category="category" :title="title" :order="order" :show.sync="showModal"></modal>
+            <dialog :category="category" :title="title" :show.sync="showCreateModal"></dialog>
         </div>
+
 </template>
 
 <script>
 
-import {interfaceTransform,pageSize} from "../../../Constants/InterfaceConstants.js";
-// import {interfaceTransform} from "../../utils/InterfaceConstants.js";
+import {interfaceTransform,pageSize,wordCount} from "../../../Constants/InterfaceConstants.js";
+import PopModal from "../PopModal/PopModal";
+import PopDialog from "../PopDialog/PopDialog";
 export default {
 
   name:"Card",
 
-  props:["category"],
+  props:["category","title"],
+
+  components:{
+    "modal":PopModal,
+    "dialog":PopDialog
+  },
 
   data () {
 
     return {
       order:"freq",
-      wordList:[]
+      wordList:[],
+      showModal:false,
+      showCreateModal:false
     }
   },
 
@@ -51,10 +62,12 @@ export default {
         let category = interfaceTransform[this.category];
 
         this.wordList = data[category];
+        this.$dispatch("child-wordList",this.wordList.slice(wordCount["downPush words"]));
       });
 
 
     },
+
 
   methods:{
 
@@ -72,7 +85,6 @@ export default {
         {
           params:data,
           before(request){
-            console.log("this ",this.previousRequest);
             if(this.previousRequest){
               this.previousRequest.abort();
             }
@@ -85,11 +97,11 @@ export default {
     },
 
     showDetail(){
-      alert("showDetail");
+      this.showModal = true;
     },
 
     addWord(){
-
+      this.showCreateModal = true;
     }
   }
 }

@@ -47,7 +47,7 @@
           <input type="checkbox" :value="tempCard.category" v-model="checkedWords"/>
           <h3 class="panel-title">{{tempCard.title}}</h3>
         </div>
-        <card :category="tempCard.category"></card>
+        <card :category="tempCard.category" :title="tempCard.title"></card>
       </div>
 
 
@@ -61,7 +61,7 @@
         </div>
       </div>
 
-      <modal category="禁发" order="freq"></modal>
+
 
 
   </div>
@@ -83,7 +83,7 @@ export default {
 
   components:{
     "card":Card,
-    "modal":PopModal
+   // "modal":PopModal
   },
 
   data () {

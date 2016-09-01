@@ -30,3 +30,26 @@ Vue.use(VueResource);
 ```
 
 6, 访问属性不要忘了this.....总是记不住...
+
+7,props需要注册,component也要注册
+
+8. A组件，B组件都引入到组件C中，但是A,B都有同样的样式.class name，那么会冲突，因此需要用scope 去进行限制，而且需要注意的是在style里面进行 import，scope是不起作用的。只能inline css
+```
+<style lang="scss" scoped>
+
+.modal{
+    display: block;
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    background-color: rgba(11, 11, 11, 0.6);
+    .action{
+        cursor: pointer;
+    }
+}
+.modal-dialog{
+    max-width: 30%;
+}
+</style>
+```
+
