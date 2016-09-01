@@ -125,3 +125,16 @@ request body:{
 ```
 
 【注】：post包括：增删改，action没有时默认为create，新增词汇
+
+
+
+---
+update:
+1. part1接口中，当pageIndex=1时，response需要加一个字段：
+```
+totalSize:       //即总页数
+```
+
+
+
+

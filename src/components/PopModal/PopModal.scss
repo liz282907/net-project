@@ -1,9 +1,17 @@
 @import "../../assets/stylesheets/variables.scss";
 
+
+/**
+* 自定义类
+*/
+
 .table{
     width: 80%;
     margin: 20px auto;
+    table-layout: fixed;
     th,td{
+        box-sizing:border-box;
+        display: table-cell;
         padding: 4px 10px;
         text-align: center;
     }
@@ -13,13 +21,29 @@
     }
 }
 
+/**
+reset style
+*/
+.pagination,.input-wrapper{
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0;
+    }
 
-.search{
+
+
+/**
+custom style
+*/
+
+//before未生效
+.my-search{
     position: relative;
     margin: 0 1%;
     width: 40%;
     &:before{
         content:"";
+        display: inline-block;
         position: absolute;
         top:0;
         left: 10px;
@@ -30,6 +54,20 @@
 }
 .modal{
     display: block;
+    .action{
+        cursor: pointer;
+    }
+    .editing-input{
+        padding-left: 8px;
+        box-sizing:border-box;
+        font-size: 12px;
+        max-width: 60%;
+    }
+    .input-wrapper{
+        input{
+            width: 32px;
+        }
+    }
 }
 
 
@@ -41,17 +79,12 @@
         background-color: $base-color;
         color: white;
     }
-    tr:hover {background-color: $table-hover}
-    tr:nth-child(even){background-color: $table-even}
-    td:nth-child(even){
-        color:$base-color;
-    }
     tbody{
         height: 60px;
         overflow: auto;
     }
-    .edit{
-        cursor: pointer;
-    }
-
+    tr:hover {background-color: $table-hover}
+    tr:nth-child(even){background-color: $table-even}
+    td:nth-child(even){color:$base-color;}
 }
+

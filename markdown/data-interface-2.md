@@ -54,11 +54,9 @@ value对应于二级菜单下面的各个词。
 url: yoursite.com/#!/hitRate
 method: "get"
 params:{
-    category:"称谓词"|"事件词"
     size:20,      //每个一级菜单的子词汇最多只显示size个
     pageSize:50,
     pageIndex:1,
-    category:"forbidden words"|"check words"|"low danger",
     orderBy: "freq" |"date"|"hitRate"|"sensitivity"|"all",   
     //选项：按热度|按时间|按命中率|按敏感度|综合排序
     desc: true,
