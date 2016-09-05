@@ -54,7 +54,7 @@
 		<pagination :total-size="totalSize" @page-click="handlePageClick"></pagination>
     </div>
 
-    <modal :category="category" :topic="topic" :title="title" :order="order" :show.sync="showModal"></modal>
+    <modal :category="category" :topic="topic" url="/event/word" :title="title" :order="order" :show.sync="showModal"></modal>
     <dialog :category="category" :topic="topic" :title="title" :show.sync="showCreateModal"></dialog>
 
 
@@ -74,6 +74,7 @@ import {eventTypeList,pageSize,wordSize} from "../../../Constants/InterfaceConst
 export default {
   data () {
     return {
+      topic: this.$parent.topic,
       eventTypeList:eventTypeList,
       order:"freq",
       option:1,
@@ -105,7 +106,7 @@ export default {
   methods:{
   	fetchData(callback,params={}){
       let defaultParams = {
-      	topic: this.$parent.topic,
+      	topic: this.topic,
         pageSize:pageSize,
         wordSize:wordSize,
         pageIndex:1,
@@ -113,6 +114,7 @@ export default {
         orderBy: this.order,
         desc: true
       };
+      console.log("---------eventList topic",)
       let data = Object.assign({},defaultParams,params);
       this.$http.get(server_path+"/event",
         {

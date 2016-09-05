@@ -18,6 +18,7 @@
 export default {
   data () {
     return {
+      topic: this.$parent.topic,
       isA:true
     }
   },

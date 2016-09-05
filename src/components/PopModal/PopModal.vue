@@ -106,6 +106,7 @@ export default {
 
 
     fetchData(params={},callback){
+      console.log("---------in pop modal",this.topic);
       let defaultParams = {
         topic: this.topic,
         pageSize:pageSize,
@@ -116,7 +117,7 @@ export default {
       };
       let data = Object.assign({},defaultParams,params);
 
-      this.$http.get(server_path+"/title",
+      this.$http.get(this.url,
         {
           params:data,
           before(request){
@@ -219,7 +220,7 @@ export default {
 
     removeWord(word){
       this.wordList.$remove(word);
-      this.$http.post(server_path+"/title",
+      this.$http.post(this.url,
           {
               topic: this.topic,
               category:this.category,
@@ -238,7 +239,7 @@ export default {
     },
 
     updateWord(prevWord,newWord){
-        this.$http.post(server_path+"/title",{
+        this.$http.post(this.url,{
           topic: this.topic,
           category:this.category,
           prevWord:prevWord,

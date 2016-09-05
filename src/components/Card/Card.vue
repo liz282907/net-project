@@ -24,7 +24,9 @@
                 </div>
 
             </div>
-            <modal :category="category" :topic="topic" :title="title" :order="order" :show.sync="showModal"></modal>
+            <modal :category="category" :topic="topic" :title="title" :order="order"
+            :show.sync="showModal"
+            url="/title"></modal>
             <dialog :category="category" :topic="topic" :title="title" :show.sync="showCreateModal"></dialog>
         </div>
 
