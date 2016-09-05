@@ -1,0 +1,97 @@
+@import "../../assets/stylesheets/variables.scss";
+@import "../../assets/stylesheets/util.scss";  //for clearfix
+
+/**
+* 自定义类
+*/
+
+.table{
+
+    width: 100%;
+    margin: 20px auto;
+    // table-layout: fixed;
+    th,td{
+        box-sizing:border-box;
+        display: table-cell;
+        padding: 10px 20px;
+        text-align: center;
+    }
+    th{
+        height: 30px;
+        text-align: center;
+    }
+}
+
+/**
+reset style
+*/
+.pagination,.input-wrapper{
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0;
+    }
+
+
+
+/**
+custom style
+*/
+
+.my-table{
+    @extend .table;
+    height: 100px;
+    overflow: auto;
+    th {
+        background-color: $base-color;
+        color: white;
+    }
+    tbody{
+        // display: block;
+        height: 100px;
+        overflow: auto;
+    }
+    tr:hover {background-color: $table-hover}
+    tr:nth-child(even){background-color: $table-even}
+    td:nth-child(even){color:$base-color;}
+}
+
+
+//before未生效
+.search-box{
+    margin-top: 30px;
+    .search-input{
+        margin: 0 10px;
+        width: 30%;
+        padding-left:10px;
+    }
+}
+
+
+
+
+
+.form-box{
+    margin-top: 20px;
+    .form-box-label{
+        padding: 8px 24px;
+        display: inline-block;
+    }
+    .radio-box{
+        vertical-align: middle;
+          .radio-item{
+                float: left;
+                padding: 10px 20px;
+                max-width: 35%;
+          }
+    }
+}
+
+
+.form-list{
+    height: 200px;
+    overflow: auto;
+}
+
+.page-wrapper{
+    float: right;
+}

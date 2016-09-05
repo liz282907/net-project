@@ -68,6 +68,20 @@ app.post("/title",function(req,res){
     res.json(titleWords);
 });
 
+app.get("/combination",function(req,res){
+    var combinationWords = JSON.parse(fs.readFileSync("./mock/combination.json"));
+    res.json(combinationWords);
+});
+
+app.get("/hitRate",function(req,res){
+    var hitRateWords = JSON.parse(fs.readFileSync("./mock/hitRate.json"));
+    res.json(hitRateWords);
+});
+
+app.get("/event",function(req,res){
+    var eventWords = JSON.parse(fs.readFileSync("./mock/eventList.json"));
+    res.json(eventWords);
+});
 
 
 

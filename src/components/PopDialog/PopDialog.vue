@@ -24,6 +24,7 @@
 <script>
 
 import {interfaceTransform} from "../../../Constants/InterfaceConstants.js";
+import {server_path} from "../../../Constants/serverUrl.js";
 
 let sentRequest = {"get":null,"update":null,"delete":null,"patch":null};
 
@@ -49,7 +50,8 @@ export default {
     },
 
     createWord(){
-        this.$http.post("/title",
+
+        this.$http.post(server_path+"/title",
           {
             category:this.category,
             word:this.content

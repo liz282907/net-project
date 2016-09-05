@@ -43,7 +43,7 @@
 
 
 export default {
-  replace: false,
+  replace: false,          //防止组件在没有el元素的时候替换el，而不是在el内部渲染
 
   data(){
     return {
@@ -61,6 +61,9 @@ export default {
     changeActive(index){
       this.curIndex = index;
     }
+  },
+  ready(){
+
   }
 
 

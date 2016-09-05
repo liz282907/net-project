@@ -37,13 +37,17 @@
 export default {
 	data(){
 		return {
-			search_content:"搜索",
+			search_content:"",
 			response_content:{},
 			checkbox:{
 				root:[],
 				sub:[]
 			}
 		}
+	},
+
+	ready(){
+		this.search_onclick();
 	},
 
 	methods:{
@@ -61,11 +65,30 @@ export default {
 			this.$parent.s = false;
 		},
 		search_onclick:function(){
-			alert(this.search_content)
-			this.response_content = {
-				"禁发词":["习庆丰","习包子","习崇祯","习近平","洗净瓶"],
-				"审核词":["联合国祝寿","送生日礼物","撒币","撒帝","有钱"]
-			};
+			var temp_ca = "";
+			this.$parent.whichData == "title" ? temp_ca="称谓词" :temp_ca="事件词";
+
+			this.$http.get("/combination",
+				{
+				  params:{
+					category:temp_ca,
+					size:20,
+					filter:this.search_content
+				  },
+				  before(request){
+					if(this.previousRequest){
+					  this.previousRequest.abort();
+					}
+					this.previousRequest = request;
+				  }
+				})
+				  .then(function(response){
+					this.response_content = dataFrame(JSON.parse(response.body));
+				  },(err)=>{
+					  console.log("请求服务器失败");
+			});
+
+
 		},
 		selectAll:function(e){
 			if(e.currentTarget.checked == true){
@@ -87,6 +110,16 @@ export default {
 			e;
 		}
 	}
+}
+
+function dataFrame(oldObj){
+	var temp = {};
+
+	for(var i=0;i<oldObj.length;i++){
+		temp[oldObj[i].name] = oldObj[i].value;
+	}
+
+	return temp;
 }
 
 function isIn(array,element){
@@ -114,7 +147,7 @@ function deleteInArray(array,element){
 #importbox {
 	position:fixed;
 	border:1px solid black;
-	width:300px;
+	width:400px;
 	height:40%;
 	background:white;
 }

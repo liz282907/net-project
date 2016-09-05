@@ -54,7 +54,7 @@ value对应于二级菜单下面的各个词。
 url: yoursite.com/#!/hitRate
 method: "get"
 params:{
-    size:20,      //每个一级菜单的子词汇最多只显示size个
+    //size:20,      //每个一级菜单的子词汇最多只显示size个
     pageSize:50,
     pageIndex:1,
     orderBy: "freq" |"date"|"hitRate"|"sensitivity"|"all",   
@@ -80,7 +80,8 @@ params:{
 
 #### response
 ```
-[
+"totalSize":10,
+"wordList":[
     {
         "id":             //序号
         "name":"低危词",   //关键词
@@ -108,3 +109,10 @@ params:{
     ...
 ]
 ```
+
+
+
+update:
+1.命中率接口 ，去除size字段
+2, filter字段没有或者为""，都表示不匹配，全展示
+3, 命中率response接口更改

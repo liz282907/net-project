@@ -2,7 +2,7 @@
   "name": "net-project",
   "version": "1.0.0",
   "description": "a project for net and security office",
-  "author": "luchen",
+  "author": "luchen & junjuang",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",

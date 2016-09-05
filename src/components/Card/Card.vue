@@ -32,6 +32,8 @@
 <script>
 
 import {interfaceTransform,wordCount,pageSize} from "../../../Constants/InterfaceConstants.js";
+import {server_path} from "../../../Constants/serverUrl.js";
+
 import PopModal from "../PopModal/PopModal";
 import PopDialog from "../PopDialog/PopDialog";
 export default {
@@ -86,7 +88,7 @@ export default {
         desc: true
       };
       let data = Object.assign({},defaultParams,params);
-      this.$http.get("/title",
+      this.$http.get(server_path+"/title",
         {
           params:data,
           before(request){

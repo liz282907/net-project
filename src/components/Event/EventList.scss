@@ -1,0 +1,97 @@
+@import "../../assets/stylesheets/variables.scss";
+@import "../../assets/stylesheets/reset.scss";
+
+/*********************variables***********************/
+
+$panel-margin: 30px;
+$center-margin: 10px;
+
+
+/*********************universal style***********************/
+.center-parent{
+    display: flex;
+    margin-left: $center-margin;
+}
+.center-child{
+    flex:1;
+    margin-left: $center-margin;
+}
+
+.table{
+    width: 100%;
+    margin: 20px auto;
+    table-layout: fixed;
+    th,td{
+        box-sizing:border-box;
+        display: table-cell;
+        padding: 4px 10px;
+        text-align: center;
+    }
+    th{
+        height: 30px;
+        text-align: center;
+    }
+}
+
+
+
+
+/**
+* 自定义类
+*/
+
+/***********form-box****************/
+
+.form-box{
+    display: flex;
+    width: 80%;
+    margin: 30px auto 0;
+    font-size: 12px;
+    .form-item{
+        flex:1;
+    }
+    .dropdown{
+        float: left;
+        min-width: 30%;
+        .select{
+            margin-left: 10px;
+            width: 40%;
+            font-size: 12px;
+        }
+    }
+    .filter-radios{
+        float: left;
+        @extend .center-parent;
+        .radio-item{
+            @extend .center-child;
+        }
+    }
+}
+.table-wrapper{
+    display: block;
+    height: 200px;
+    overflow: auto;
+     .tag{
+            display: inline-block;
+            margin-left: 16px;
+        }
+}
+.my-table{
+    @extend .table;
+    height: 100px;
+    overflow: auto;
+    th {
+        background-color: $base-color;
+        color: white;
+    }
+    tbody{
+        // display: block;
+        height: 100px;
+        overflow: auto;
+    }
+    tr:hover {background-color: $table-hover}
+    tr:nth-child(even){background-color: $table-even}
+    th:nth-child(1),td:nth-child(1){width: 10%;}
+    th:nth-child(1),th:nth-child(2){border-right: 1px solid #fff;}
+    th:nth-child(2),td:nth-child(2){width: 30%;}
+}

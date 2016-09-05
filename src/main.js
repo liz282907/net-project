@@ -5,6 +5,8 @@ import Event from "./components/Event/Event";
 import Combination from "./components/Combination/Combination";
 import HitRate from "./components/HitRate/HitRate";
 
+import EventList from "./components/Event/EventList";
+import NewEvent from "./components/Event/NewEvent";
 
 import VueRouter from "vue-router";
 import VueResource from "vue-resource";
@@ -19,7 +21,15 @@ router.map({
 		component:Title
 	},
 	"/event":{
-		component:Event
+		component:Event,
+		subRoutes:{
+			"/list":{
+				component:EventList
+			},
+			"/create":{
+				component:NewEvent
+			}
+		}
 	},
 	"/combination":{
 		component:Combination
@@ -30,7 +40,8 @@ router.map({
 });
 
 router.redirect({
-  '*': '/title'
+  '*': '/title',
+  '/event':'/event/list'
 })
 
 router.start(App,"body");

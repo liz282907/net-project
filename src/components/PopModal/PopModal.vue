@@ -62,6 +62,7 @@
 <script>
 
 import {interfaceTransform,pageSize} from "../../../Constants/InterfaceConstants.js";
+import {server_path} from "../../../Constants/serverUrl.js";
 
 let sentRequest = {"get":null,"update":null,"delete":null,"patch":null};
 
@@ -116,7 +117,7 @@ export default {
         desc: true
       };
       let data = Object.assign({},defaultParams,params);
-      this.$http.get("/title",
+      this.$http.get(server_path+"/title",
         {
           params:data,
           before(request){
@@ -195,7 +196,7 @@ export default {
 
     removeWord(word){
       this.wordList.$remove(word);
-      this.$http.post("/title",
+      this.$http.post(server_path+"/title",
           {
               category:this.category,
               word:word,
@@ -213,7 +214,7 @@ export default {
     },
 
     updateWord(prevWord,newWord){
-        this.$http.post("/title",{
+        this.$http.post(server_path+"/title",{
           category:this.category,
           prevWord:prevWord,
           newWord:newWord,
@@ -251,6 +252,6 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "./PopModal.scss";
 </style>

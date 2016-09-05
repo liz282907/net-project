@@ -1,0 +1,29 @@
+{
+	"wordList":[
+	    {
+	        "id":1,
+	        "name":"低危词",
+	        "sensitivity":"30%",
+	        "searchNum":1299,
+	        "hitNum":956,
+	        "hitRate":"80%",
+	        "trend":"增长",
+	        "date":"2016-09-02",
+	        "event":"习近平",
+	        "route": "test"
+	    },
+	    {
+	        "id":2,
+	        "name":"低危词",
+	        "sensitivity":"30%",
+	        "searchNum":333,
+	        "hitNum":129,
+	        "hitRate":"80%",
+	        "trend":"增长",
+	        "date":"2016-09-03",
+	        "event":"习近平",
+	        "route":  "test"
+	    }
+	],
+	"totalSize":30
+}
