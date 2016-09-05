@@ -2,12 +2,13 @@
         <div class="panel-body" :value="category">
             <div class="filter-radios">
               <div class="radio-item">
-                <input type="radio" value="freq" v-model="order" checked/>
+                <input type="radio" value="freq" v-model="order" checked @change="fetchServerData"/>
                 <label >按热度</label>
               </div>
 
               <div class="radio-item">
-                <input type="radio" value="date" v-model="order" />
+                <input type="radio" value="date" v-model="order"
+                    @change="fetchServerData"/>
                 <label >按时间</label>
               </div>
             </div>
@@ -23,8 +24,8 @@
                 </div>
 
             </div>
-            <modal :category="category" :title="title" :order="order" :show.sync="showModal"></modal>
-            <dialog :category="category" :title="title" :show.sync="showCreateModal"></dialog>
+            <modal :category="category" :topic="topic" :title="title" :order="order" :show.sync="showModal"></modal>
+            <dialog :category="category" :topic="topic" :title="title" :show.sync="showCreateModal"></dialog>
         </div>
 
 </template>
@@ -40,7 +41,7 @@ export default {
 
   name:"Card",
 
-  props:["category","title"],
+  props:["category","title","topic"],
 
   components:{
     "modal":PopModal,
@@ -59,11 +60,15 @@ export default {
 
   ready () {
 
+      this.fetchServerData();
+      /*
       this.fetchData({category:this.category},function(response){
-        let data = response.json();
+        //let data = response.json().wordList;
         let category = interfaceTransform[this.category];
 
-        this.wordList = data[category];
+        //this.wordList = data[category];
+        this.wordList = response.json().wordList;
+        this.totalSize = response.json().totalSize;
         let length = wordCount["downPush words"];
 
         this.$dispatch("child-wordList",
@@ -71,6 +76,7 @@ export default {
               [category]:this.wordList.length<length?this.wordList:this.wordList.slice(length)
             })
       });
+      */
 
 
     },
@@ -79,8 +85,9 @@ export default {
   methods:{
 
 
-    fetchData(params={},callback){
+    fetchData(callback,params={}){
       let defaultParams = {
+        topic: this.topic,
         pageSize:pageSize,
         pageIndex:1,
         category: this.category,
@@ -100,6 +107,25 @@ export default {
         })
           .then(callback,(err)=>{
               console.log("请求服务器失败");
+          });
+    },
+
+    fetchServerData(){
+        this.fetchData(function(response){
+        //let data = response.json().wordList;
+        //let category = interfaceTransform[this.category];
+
+        //this.wordList = data[category];
+            this.wordList = response.json().wordList;
+            var size;
+            if(size = response.json.totalSize)
+                this.totalSize = size;
+            let length = wordCount["downPush words"];
+
+            this.$dispatch("child-wordList",
+                {
+                  [this.category]:this.wordList.length<length?this.wordList:this.wordList.slice(length)
+                })
           });
     },
 

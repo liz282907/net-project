@@ -32,7 +32,7 @@ export default {
 
   name:"PopDialog",
 
-  props:["category","title","show"],
+  props:["category","title","show","topic"],
 
   data () {
 
@@ -53,6 +53,7 @@ export default {
 
         this.$http.post(server_path+"/title",
           {
+            topic: this.topic,
             category:this.category,
             word:this.content
           })

@@ -46,6 +46,8 @@ export default {
 		}
 	},
 
+	props:["topic"],
+
 	ready(){
 		this.search_onclick();
 	},
@@ -71,6 +73,7 @@ export default {
 			this.$http.get("/combination",
 				{
 				  params:{
+				  	topic: this.topic,
 					category:temp_ca,
 					size:20,
 					filter:this.search_content

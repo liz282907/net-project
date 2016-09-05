@@ -87,6 +87,7 @@ export default {
   methods:{
   	fetchData(callback,params={}){
       let defaultParams = {
+      	topic: this.$parent.topic,
         pageSize:pageSize,
         wordSize:wordSize,
         pageIndex:1,

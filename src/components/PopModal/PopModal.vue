@@ -40,19 +40,7 @@
             </div>
       </div>
       <div class="modal-footer">
-        <ul class="pagination pagination-sm">
-            <li class="pageList[0]===1?'disabled':''"><a href="javascrpt:void(0)" @click="changePagination(-1)">&laquo;</a></li>
-            <li v-for="value in pageList" :class="value===curPage?'active':''" @click="clickPage(value)">
-                <a href="javascrpt:void(0)">{{value}}</a>
-            </li>
-            <li><a href="javascrpt:void(0)">...</a></li>
-            <li><a href="javascrpt:void(0)" @click="changePagination(1)">&raquo;</a></li>
-        </ul>
-        <span class="input-wrapper">转到第
-            <input type="number" min="1" :max="totalSize"
-                @keyup.13 = "changePage" v-model="toPage"/>/{{totalSize}}页
-        </span>
-
+          <pagination :total-size="totalSize" @page-click="handlePageClick"></pagination>
       </div>
     </div>
   </div>
@@ -63,6 +51,9 @@
 
 import {interfaceTransform,pageSize} from "../../../Constants/InterfaceConstants.js";
 import {server_path} from "../../../Constants/serverUrl.js";
+import Pagination from "../Pagination/pagination";
+
+
 
 let sentRequest = {"get":null,"update":null,"delete":null,"patch":null};
 
@@ -70,7 +61,7 @@ export default {
 
   name:"PopModal",
 
-  props:["category","title","order","show"],
+  props:["category","title","order","show","topic"],
 
   data () {
 
@@ -80,6 +71,7 @@ export default {
       curPage:1,
       searchContent:"",
       pageList:[1,2,3,4,5],
+      totalSize:"",
       wordList:["习近平","测试","测试2","测试3","测试21"].map(word=>{
         return {
           editing:false,value:word,content:word
@@ -94,7 +86,9 @@ export default {
         category:this.category,
         order:this.order
       };
-      this.clickPage(1);
+      console.log('-----------pop modal ready');
+      this.handlePageClick(1);
+      //this.clickPage(1);
       // this.fetchData(params,function(response){
       //   let data = response.json();
       //   let category = interfaceTransform[this.category];
@@ -105,11 +99,16 @@ export default {
 
     },
 
+  components:{
+    "pagination":Pagination
+  },
+
   methods:{
 
 
     fetchData(params={},callback){
       let defaultParams = {
+        topic: this.topic,
         pageSize:pageSize,
         pageIndex:1,
         category: this.category,
@@ -134,9 +133,6 @@ export default {
           });
     },
 
-    addWord(){
-
-    },
 
     getfilteredWord(){
         //searchContent
@@ -153,6 +149,28 @@ export default {
         });
     },
 
+
+    handlePageClick(page){
+      this.fetchData({pageIndex:page,filter:this.searchContent},(response)=>{
+
+        console.log("-----click page ajax");
+        //let data = response.json().wordList[interfaceTransform[this.category]];
+        let data = response.json().wordList;
+        this.wordList = data.map(word=>{
+          return {
+            editing:false,value:word,content:word
+          }
+        });
+
+        var size;
+        if(size = response.json().totalSize)
+                this.totalSize = size;
+
+
+      });
+    },
+
+    //deprecated
     changePage(){
 
       let toPage = parseInt(this.toPage);
@@ -161,18 +179,22 @@ export default {
       this.clickPage(toPage);
     },
 
+    //deprecated
     clickPage(page){
       this.curPage = page;
       //ajax
       this.fetchData({pageIndex:page,filter:this.searchContent},(response)=>{
-        let data = response.json()[interfaceTransform[this.category]];
+
+        console.log("-----click page ajax");
+        //let data = response.json().wordList[interfaceTransform[this.category]];
+        let data = response.json().wordList;
         this.wordList = data.map(word=>{
           return {
             editing:false,value:word,content:word
           }
         });
 
-        let size;
+        var size;
         if(size = response.json().totalSize)
                 this.totalSize = size;
 
@@ -180,6 +202,7 @@ export default {
       });
     },
 
+    //deprecated
     changePagination(step){
       //step:[1,-1]
       if((step===-1 && this.pageList[0]===1)||(step===1 && this.pageList.slice(-1)===this.totalSize))
@@ -198,8 +221,9 @@ export default {
       this.wordList.$remove(word);
       this.$http.post(server_path+"/title",
           {
+              topic: this.topic,
               category:this.category,
-              word:word,
+              word:word.content,
               action:"delete"
           }).then((response)=>{
               console.log("删除成功");
@@ -215,6 +239,7 @@ export default {
 
     updateWord(prevWord,newWord){
         this.$http.post(server_path+"/title",{
+          topic: this.topic,
           category:this.category,
           prevWord:prevWord,
           newWord:newWord,

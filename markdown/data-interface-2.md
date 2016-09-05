@@ -27,6 +27,7 @@ filter
 
 #### response
 ```
+"wordList":
 [
     {
         "name":"低危词",
@@ -40,7 +41,8 @@ filter
         "name":"禁发词",
         "value":["习近平","习大大"]
     }
-]
+],
+"totalSize":20
 ```
 
 说明：
@@ -115,4 +117,4 @@ params:{
 update:
 1.命中率接口 ，去除size字段
 2, filter字段没有或者为""，都表示不匹配，全展示
-3, 命中率response接口更改
+3, 命中率response接口更改,见 一、详细数据接口：组合词页面response

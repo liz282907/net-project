@@ -47,7 +47,7 @@
           <input type="checkbox" :value="tempCard.category" v-model="checkedWords"/>
           <h3 class="panel-title">{{tempCard.title}}</h3>
         </div>
-        <card :category="tempCard.category" :title="tempCard.title"></card>
+        <card :category="tempCard.category" :topic="topic" :title="tempCard.title"></card>
       </div>
 
 
@@ -112,6 +112,8 @@ export default {
         {name:"oneWeek",value:7,zh_value:"一周"},
       ];
     return {
+
+      topic: this.$parent.topic,
       duration:[],
       cardList:cardList,
       duraionList:duraionList,
@@ -120,6 +122,7 @@ export default {
       checkedWords:[], //多选框结果
     }
   },
+
 
   events:{
     "child-wordList":function(msg){

@@ -1,6 +1,6 @@
 <template>
 
-  <div>
+  <div class="wrapper clearfix">
       <div class="search-box">
           <img src="../../assets/images/search.png" alt="search图标"/>
           <input type="text"  placeholder="搜索" class="search-input" v-model="searchContent" @change="fetchServerData">
@@ -53,7 +53,7 @@
             </table>
       </div>
       <div class="page-wrapper">
-          <pagination :total-size="totalSize" @handlePageClick="handlePageClick"></pagination>
+          <pagination :total-size="totalSize" @page-click="handlePageClick"></pagination>
       </div>
 
 
@@ -86,6 +86,7 @@ export default {
       range: rangeList[0].name,
       wordList:[],
       searchContent:"",
+      totalSize: 0
 
     }
   },
@@ -104,6 +105,7 @@ export default {
 
       fetchData(callback,params={}){
           let defaultParams = {
+            topic: this.$parent.topic,
             pageSize:pageSize,
             pageIndex:1,
             orderBy: this.order,

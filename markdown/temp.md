@@ -97,3 +97,30 @@
             </div>
         </div>
       </div>
+
+
+
+      {"wordList":{
+    "forbiddenWords":["习庆丰","刁近平","洗净瓶","test1","test2","test3","test4","test5","test6","test9","test10","test11",
+            "test16","test19","test23","test21"
+
+    ],
+    "auditedWords":["洗净瓶","习庆丰","刁近平"],
+    "lowDangerWords":["刁近平","习庆丰","洗净瓶"]
+},
+"totalSize":20
+}
+
+
+<ul class="pagination pagination-sm">
+            <li class="pageList[0]===1?'disabled':''"><a href="javascrpt:void(0)" @click="changePagination(-1)">&laquo;</a></li>
+            <li v-for="value in pageList" :class="value===curPage?'active':''" @click="clickPage(value)">
+                <a href="javascrpt:void(0)">{{value}}</a>
+            </li>
+            <li><a href="javascrpt:void(0)">...</a></li>
+            <li><a href="javascrpt:void(0)" @click="changePagination(1)">&raquo;</a></li>
+        </ul>
+        <span class="input-wrapper">转到第
+            <input type="number" min="1" :max="totalSize"
+                @keyup.13 = "changePage" v-model="toPage"/>/{{totalSize}}页
+        </span>

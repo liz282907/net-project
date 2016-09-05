@@ -24,6 +24,7 @@
          </div>
     </header>
   <div class="content">
+          <h4>主题词：{{topic}}</h4>
           <router-view></router-view>
   </div>
     <footer class="footer">
@@ -54,7 +55,8 @@ export default {
           {name:"命中率统计",url:"/hitRate"},
         ],
         curIndex:0,
-        curUser:"陈璐"
+        curUser:"陈璐",
+        topic:"习近平"
     }
   },
   methods:{
@@ -62,10 +64,6 @@ export default {
       this.curIndex = index;
     }
   },
-  ready(){
-
-  }
-
 
 }
 </script>
@@ -100,6 +98,7 @@ body {
   min-height:450px;
 }
 .footer{
+  margin-top:30px;
   text-align:center;
 }
 

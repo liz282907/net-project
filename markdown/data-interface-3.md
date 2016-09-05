@@ -25,7 +25,8 @@ params:{
     category:,    1                 //事件类型ID,此处1即代表出访
     orderBy: "freq" |"date",   //选项：按频率|按时间
     desc: true,
-    [filter:""]           //可选项         
+    [filter:""]           //可选项  ,
+    topic:        
 }
 ```
 补充说明：
@@ -193,4 +194,37 @@ method: "get"
 
 
 update:
-1，事件列表获取 totalSize
+
+1，事件列表获取 totalSize，形如
+```
+
+"eventList":              //here
+[
+    {
+        "id": 1,            //事件id
+        "name":"江泽民祝寿事件",
+        "wordList":["联合国祝寿","送生日祝福"...]      
+        //wordLis的length等于request中的wordSize
+    },
+    {
+         "id": 2,           
+        "name":"事件2",
+        "wordList":["联合国祝寿","送生日祝福"...]
+    },
+    ...
+],
+totalSize:10                 //here
+
+```
+
+2，每个请求都添加一个topic字段。
+
+
+todo:
+1,delete接口请求       更改请求内容
+2，topic =?           done
+3, hitrate pagination 请求没有发送。 done，待检测
+4, table scroll取消       done
+5, totalSize没显示
+6, title页面的popmodal 中把原有的pagination代码用 pagination组件替换
+

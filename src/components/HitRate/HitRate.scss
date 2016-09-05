@@ -37,19 +37,20 @@ reset style
 custom style
 */
 
+.wrapper{
+    width: 100%;
+}
 .my-table{
     @extend .table;
-    height: 100px;
-    overflow: auto;
     th {
         background-color: $base-color;
         color: white;
     }
-    tbody{
-        // display: block;
-        height: 100px;
-        overflow: auto;
-    }
+    // tbody{
+    //     // display: block;
+    //     height: 100px;
+    //     overflow: auto;
+    // }
     tr:hover {background-color: $table-hover}
     tr:nth-child(even){background-color: $table-even}
     td:nth-child(even){color:$base-color;}
@@ -61,7 +62,6 @@ custom style
     margin-top: 30px;
     .search-input{
         margin: 0 10px;
-        width: 30%;
         padding-left:10px;
     }
 }
@@ -72,6 +72,7 @@ custom style
 
 .form-box{
     margin-top: 20px;
+    overflow: hidden;
     .form-box-label{
         padding: 8px 24px;
         display: inline-block;
@@ -86,12 +87,7 @@ custom style
     }
 }
 
-
-.form-list{
-    height: 200px;
-    overflow: auto;
-}
-
 .page-wrapper{
+    margin-top: 20px;
     float: right;
 }

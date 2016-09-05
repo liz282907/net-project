@@ -1,9 +1,8 @@
-{
-    "forbiddenWords":["习庆丰","刁近平","洗净瓶","test1","test2","test3","test4","test5","test6","test9","test10","test11",
+{"wordList":
+    ["习庆丰","刁近平","洗净瓶","test1","test2","test3","test4","test5","test6","test9","test10","test11",
     				"test16","test19","test23","test21"
-
     ],
-    "auditedWords":["洗净瓶","习庆丰","刁近平"],
-    "lowDangerWords":["刁近平","习庆丰","洗净瓶"]
+"totalSize":10
 }
+
 

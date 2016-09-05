@@ -82,7 +82,7 @@
 		</div>
 	</div>
   </div>
-  <import-box v-if='s' v-bind:style="{ top:mouseY+'px',left:mouseX+'px' }"></import-box>
+  <import-box v-if='s' :topic="topic" v-bind:style="{ top:mouseY+'px',left:mouseX+'px' }"></import-box>
 </template>
 
 <script>
@@ -99,6 +99,7 @@ function isIn(array,element){
 export default {
   data () {
     return {
+    	topic:this.$parent.topic,
 		title_data:["习近平","习大大"],
 		event_data:["G20","祝寿"],
 		comb_data:[],
