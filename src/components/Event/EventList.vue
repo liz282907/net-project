@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="search-wrapper form-item">
-          <search placeholder="搜索" @child-search-change='changeOption'></search>
+          	<search placeholder="搜索" @child-search-change='changeOption'></search>
         </div>
     </div>
     <div class="table-wrapper">
@@ -41,11 +41,21 @@
 			                        <span class="label label-default" >{{keyword}}</span>
 			                    </li>
 			                </ul>
+			                <div class="btn-group">
+				                  <button class="more" @click="showDetail">查看详情</button>
+				                  <button class="add" @click="addWord">添加词汇</button>
+			                </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+    <div class="pagination-wrapper">
+		<pagination :total-size="totalSize" @page-click="handlePageClick"></pagination>
+    </div>
+
+    <modal :category="category" :topic="topic" :title="title" :order="order" :show.sync="showModal"></modal>
+    <dialog :category="category" :topic="topic" :title="title" :show.sync="showCreateModal"></dialog>
 
 
 
@@ -54,9 +64,12 @@
 
 <script>
 import Search from "../Search/Search";
+import Pagination from "../Pagination/pagination";
+import PopModal from "../PopModal/PopModal";
+import PopDialog from "../PopDialog/PopDialog";
+
 import {server_path} from "../../../Constants/serverUrl.js";
 import {eventTypeList,pageSize,wordSize} from "../../../Constants/InterfaceConstants.js";
-import Pagination from "../Pagination/pagination";
 
 export default {
   data () {
@@ -64,12 +77,17 @@ export default {
       eventTypeList:eventTypeList,
       order:"freq",
       option:1,
-      eventList:[]
+      eventList:[],
+      totalSize:0,
+      showModal:false,
+      showCreateModal:false
     }
   },
   components:{
     "search":Search,
-    "pagination":Pagination
+    "pagination":Pagination,
+    "modal":PopModal,
+    "dialog":PopDialog
   },
   ready(){
   		this.fetchData((response)=>{
@@ -124,8 +142,25 @@ export default {
     	var params = searchContent?{filter:searchContent}:{};
     	this.fetchData((response)=>{
     		this.eventList = response.json().eventList;
+    		if(response.json().totalSize)
+    			this.totalSize = response.json().totalSize;
     		console.log("请求服务器成功");
     	},params);
+    },
+
+    handlePageClick(page){
+    	this.fetchData((response)=>{
+  			console.log("获取事件列表成功");
+  			this.eventList = response.json().eventList;
+  		},{pageIndex:page});
+    },
+
+    showDetail(){
+      this.showModal = true;
+    },
+
+    addWord(){
+      this.showCreateModal = true;
     }
 
 

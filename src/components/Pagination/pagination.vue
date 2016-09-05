@@ -33,7 +33,7 @@ export default {
 
   ready () {
 
-    this.$dispatch("page-ready",1);
+    //this.$dispatch("page-ready",1);
 
     },
 

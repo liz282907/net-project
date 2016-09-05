@@ -133,6 +133,7 @@ export default {
         var params = {filter:this.searchContent};
           this.fetchData(function(response){
                 this.wordList = response.json().wordList;
+                this.totalSize = response.json().totalSize;
                 console.log("form请求成功");
             },params);
     },

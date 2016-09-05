@@ -121,6 +121,7 @@ export default {
             if(size = response.json.totalSize)
                 this.totalSize = size;
             let length = wordCount["downPush words"];
+            console.log("--------length",this.wordList.length<length?this.wordList:this.wordList.slice(0,length));
 
             this.$dispatch("child-wordList",
                 {

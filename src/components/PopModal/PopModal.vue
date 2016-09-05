@@ -61,7 +61,7 @@ export default {
 
   name:"PopModal",
 
-  props:["category","title","order","show","topic"],
+  props:["category","title","order","show","topic","url"],
 
   data () {
 
@@ -86,7 +86,6 @@ export default {
         category:this.category,
         order:this.order
       };
-      console.log('-----------pop modal ready');
       this.handlePageClick(1);
       //this.clickPage(1);
       // this.fetchData(params,function(response){
@@ -116,6 +115,7 @@ export default {
         desc: true
       };
       let data = Object.assign({},defaultParams,params);
+
       this.$http.get(server_path+"/title",
         {
           params:data,

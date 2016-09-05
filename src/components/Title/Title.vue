@@ -60,7 +60,7 @@
             <div>
               "审核"
               <ul>
-                  <li v-for="keyword in childData['auditedWords']" class="tag">
+                  <li v-for="keyword in childData['check words']" class="tag">
                       <span class="label label-default" >{{keyword}}</span>
                   </li>
               </ul>
@@ -68,7 +68,7 @@
             <div>
               "低危"
               <ul>
-                  <li v-for="keyword in childData['lowDangerWords']" class="tag">
+                  <li v-for="keyword in childData['low danger']" class="tag">
                       <span class="label label-default" >{{keyword}}</span>
                   </li>
               </ul>
@@ -126,8 +126,9 @@ export default {
 
   events:{
     "child-wordList":function(msg){
-            console.log("dispath ",msg);
+
         this.childData = Object.assign({},this.childData,msg);
+        console.log("----dispath ",this.childData);
     }
   },
 

@@ -60,6 +60,10 @@ params:{
 {
     "forbiddenWords":["习庆丰","刁近平","洗净瓶"...]
 }
+{
+    "wordList":[],
+    "totalSize":
+}
 ```
 【注意】：
 
