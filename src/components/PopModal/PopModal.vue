@@ -22,7 +22,6 @@
                             <td v-else>
                                 <input class="editing-input" type="text"
                                     v-model="word.value"
-                                    @blur="doneEdit($index)"
                                     @keyup.13="doneEdit($index)"/>
                             </td>
                             <td>
@@ -40,7 +39,7 @@
             </div>
       </div>
       <div class="modal-footer">
-          <pagination :total-size="totalSize" @page-click="handlePageClick"></pagination>
+          <pagination :total-size="wordTotalSize" @page-click="handlePageClick"></pagination>
       </div>
     </div>
   </div>
@@ -61,7 +60,8 @@ export default {
 
   name:"PopModal",
 
-  props:["category","title","order","show","topic","url"],
+  props:["category","title","order","show","topic","url","wordTotalSize",
+  "wordList"],
 
   data () {
 
@@ -72,11 +72,13 @@ export default {
       searchContent:"",
       pageList:[1,2,3,4,5],
       totalSize:"",
+      /*
       wordList:["习近平","测试","测试2","测试3","测试21"].map(word=>{
         return {
           editing:false,value:word,content:word
         }
       })
+      */
     }
   },
 
@@ -87,15 +89,6 @@ export default {
         order:this.order
       };
       this.handlePageClick(1);
-      //this.clickPage(1);
-      // this.fetchData(params,function(response){
-      //   let data = response.json();
-      //   let category = interfaceTransform[this.category];
-
-      //   this.wordList = data[category];
-      // });
-
-
     },
 
   components:{
@@ -117,6 +110,8 @@ export default {
       };
       let data = Object.assign({},defaultParams,params);
 
+      this.$dispatch("fetch-word-list",data);
+/*
       this.$http.get(this.url,
         {
           params:data,
@@ -132,12 +127,21 @@ export default {
           .then(callback,(err)=>{
               console.log("请求服务器失败");
           });
+*/
     },
 
 
     getfilteredWord(){
         //searchContent
         console.log("----------on change ",this.searchContent);
+        let sentData = {
+          filter:this.searchContent
+        };
+
+
+        this.$dispatch("on-input-change",sentData);
+/*
+        let data = Object.assign({},defaultParams,params);
         this.fetchData({
           filter: this.searchContent
         },(response)=>{
@@ -148,10 +152,26 @@ export default {
               }
             });
         });
+*/
     },
 
 
     handlePageClick(page){
+/*
+      let defaultParams = {
+        topic: this.topic,
+        pageSize:pageSize,
+        pageIndex:1,
+        category: this.category,
+        orderBy: this.order,
+        desc: true
+      };
+      let data = Object.assign({},defaultParams,
+      {pageIndex:page,filter:this.searchContent});
+*/
+      let data = {pageIndex:page,filter:this.searchContent};
+      this.$dispatch("on-page-click",data);
+      /*
       this.fetchData({pageIndex:page,filter:this.searchContent},(response)=>{
 
         console.log("-----click page ajax");
@@ -169,6 +189,7 @@ export default {
 
 
       });
+      */
     },
 
     //deprecated
@@ -220,6 +241,11 @@ export default {
 
     removeWord(word){
       this.wordList.$remove(word);
+      var postBody = {
+              word:word.content,
+          };
+      this.$dispatch("on-word-delete",postBody);
+      /*
       this.$http.post(this.url,
           {
               topic: this.topic,
@@ -231,6 +257,7 @@ export default {
           },(err)=>{
               alert("删除失败");
           })
+          */
       //delete ajax
     },
 
@@ -239,6 +266,14 @@ export default {
     },
 
     updateWord(prevWord,newWord){
+
+        var requestBody = {
+            prevWord:prevWord,
+            newWord:newWord,
+        };
+
+        this.$dispatch("on-edit-done",requestBody);
+/*
         this.$http.post(this.url,{
           topic: this.topic,
           category:this.category,
@@ -248,9 +283,6 @@ export default {
         },{
                 before(request){
                     console.log("prev word ",this.previousRequest);
-                    // if(this.previousRequest&& (this.previousRequest.body.prevWord==request.body.prevWord)){
-                    //     this.previousRequest.abort();
-                    // }
                     var prevUpdateRequest = sentRequest["update"];
                     if(prevUpdateRequest && (prevUpdateRequest.body.prevWord==request.body.prevWord)){
                         prevUpdateRequest.abort();
@@ -261,6 +293,7 @@ export default {
           }).then(response=>{
             console.log("更新成功");
         },err=> alert("更新失败"))
+*/
     },
 
     doneEdit(index){
@@ -268,6 +301,7 @@ export default {
         let tempMsg = this.wordList[index].value;
         this.wordList[index].content = tempMsg;
         this.wordList[index].editing = false;
+
         // word.editing = false;
         this.updateWord(prevWord,tempMsg);
     },

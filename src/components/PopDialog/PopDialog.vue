@@ -51,6 +51,8 @@ export default {
 
     createWord(){
 
+        this.$dispatch("on-word-create",this.content);
+        /*
         this.$http.post(server_path+"/title",
           {
             topic: this.topic,
@@ -62,7 +64,7 @@ export default {
             },(err)=>{
                 console.log("创建失败");
             });
-
+          */
           this.closeModal();
 
     },

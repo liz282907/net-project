@@ -42,8 +42,8 @@
 			                    </li>
 			                </ul>
 			                <div class="btn-group">
-				                  <button class="more" @click="showDetail">查看详情</button>
-				                  <button class="add" @click="addWord">添加词汇</button>
+				                  <button class="more" @click="showDetail(event.id)">查看详情</button>
+				                  <button class="add" @click="addWord(event.id)">添加词汇</button>
 			                </div>
                         </td>
                     </tr>
@@ -54,8 +54,18 @@
 		<pagination :total-size="totalSize" @page-click="handlePageClick"></pagination>
     </div>
 
-    <modal :category="category" :topic="topic" url="/event/word" :title="title" :order="order" :show.sync="showModal"></modal>
-    <dialog :category="category" :topic="topic" :title="title" :show.sync="showCreateModal"></dialog>
+    <modal :category="category" :topic="topic" url="/event/word"
+    		:title="title" :order="order" :show.sync="showModal"
+    		:word-total-size = "wordTotalSize"
+    		:word-list = "wordList"
+    		@on-edit-done="handleEditDone"
+    		@on-word-delete="handleDeleteClick"
+    		@on-page-click = "handleWordPageClick"
+    		@fetch-word-list="fetchWordData"
+    		@on-input-change= "handleModalInput"></modal>
+    <dialog :category="category" :topic="topic" :title="title"
+    		:show.sync="showCreateModal"
+    		@on-word-create="handleWordCreate"></dialog>
 
 
 
@@ -71,6 +81,8 @@ import PopDialog from "../PopDialog/PopDialog";
 import {server_path} from "../../../Constants/serverUrl.js";
 import {eventTypeList,pageSize,wordSize} from "../../../Constants/InterfaceConstants.js";
 
+let sentWordRequest = {"get":null,"update":null,"delete":null,"patch":null};
+
 export default {
   data () {
     return {
@@ -81,7 +93,10 @@ export default {
       eventList:[],
       totalSize:0,
       showModal:false,
-      showCreateModal:false
+      showCreateModal:false,
+      wordTotalSize:0,
+      wordList:[],
+      curId:1
     }
   },
   components:{
@@ -131,6 +146,64 @@ export default {
           });
     },
 
+    fetchWordData(callback,paramsBody={}){
+    	var defaultParams = {
+    		id:this.curId,
+    		pageIndex:1,
+    		pageSize:this.wordTotalSize
+    	}
+    	var finalData = Object.assign({},defaultParams,paramsBody);
+    	this.$http.get(server_path+"/event/word",
+        {
+          params:finalData,
+          before(request){
+            // console.log("this ",this.previousRequest,sentRequest["get"]);
+            if(sentWordRequest["get"]){
+              sentWordRequest["get"].abort();
+            }
+            sentWordRequest["get"] =request;
+            // this.previousRequest = request;
+          }
+        })
+          .then(callback,(err)=>{
+              console.log("请求服务器失败");
+          });
+    },
+
+    handleWordCreate(word){
+    	this.$http.post(server_path+"/event/word",
+          {
+            id:this.curId,
+            word:word
+          })
+            .then(response=>{
+                console.log("创建成功");
+            },(err)=>{
+                console.log("创建失败");
+            });
+    },
+
+    handleWordPageClick(params){
+    	console.log("-----click page ajax");
+    	this.fetchWordData((response)=>{
+
+	        console.log("获取单词列表成功");
+	        let data = response.json().wordList;
+	        this.wordList = data.map(word=>{
+	          return {
+	            editing:false,value:word,content:word
+	          }
+	        });
+
+	        var size;
+	        if(size = response.json().totalSize)
+	                this.wordTotalSize = size;
+
+
+      },params);
+
+    },
+
     // changeOption(){
     // 	var params = searchContent?{filter:searchContent}:{};
     // 	console.log("-------in parent");
@@ -150,6 +223,56 @@ export default {
     	},params);
     },
 
+    handleEditDone(postBody){
+    	var data = {
+    		id:this.curId,
+    		action:"patch"
+    	}
+    	var finalData = Object.assign({},data,postBody);
+    	 this.$http.post(server_path+"/event/word",finalData,{
+                before(request){
+                    console.log("prev word ",this.previousRequest);
+                    var prevUpdateRequest = sentWordRequest["update"];
+                    if(prevUpdateRequest && (prevUpdateRequest.body.prevWord==request.body.prevWord)){
+                        prevUpdateRequest.abort();
+                    }
+                    sentWordRequest["update"] =request;
+                    // this.previousRequest = request;
+                }
+          }).then(response=>{
+            console.log("更新成功");
+        },err=> alert("更新失败"))
+    },
+
+    handleModalInput(paramsBody){
+        this.fetchWordData((response)=>{
+        	console.log("filter成功");
+            let data = response.json().wordList;
+            //let data = response.json()[interfaceTransform[this.category]];
+            this.wordList = data.map(word=>{
+              return {
+                editing:false,value:word,content:word
+              }
+            });
+            this.wordTotalSize = response.json().totalSize;
+
+        },paramsBody);
+    },
+
+    handleDeleteClick(postBody){
+    	var data = {
+    		id:this.curId,
+    		action:"delete"
+    	}
+    	var finalData = Object.assign({},data,postBody);
+    	this.$http.post(server_path+"/event/word",finalData)
+    		.then((response)=>{
+              console.log("删除成功");
+          },(err)=>{
+              alert("删除失败");
+          })
+    },
+
     handlePageClick(page){
     	this.fetchData((response)=>{
   			console.log("获取事件列表成功");
@@ -157,12 +280,16 @@ export default {
   		},{pageIndex:page});
     },
 
-    showDetail(){
-      this.showModal = true;
+    showDetail(id){
+    	this.curId = id;
+      	this.showModal = true;
+      	this.handleWordPageClick({pageIndex:1});
+
     },
 
-    addWord(){
-      this.showCreateModal = true;
+    addWord(id){
+    	this.id = id;
+      	this.showCreateModal = true;
     }
 
 
