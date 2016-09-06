@@ -124,3 +124,12 @@
             <input type="number" min="1" :max="totalSize"
                 @keyup.13 = "changePage" v-model="toPage"/>/{{totalSize}}页
         </span>
+
+         <modal :category="category" :topic="topic" :title="title" :order="order"
+            :show.sync="showModal"
+            url="/title"></modal>
+            <dialog :category="category" :topic="topic" :title="title" :show.sync="showCreateModal"></dialog>
+
+
+
+            @fetch-word-list="fetchWordData"

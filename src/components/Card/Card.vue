@@ -24,10 +24,19 @@
                 </div>
 
             </div>
-            <modal :category="category" :topic="topic" :title="title" :order="order"
-            :show.sync="showModal"
-            url="/title"></modal>
-            <dialog :category="category" :topic="topic" :title="title" :show.sync="showCreateModal"></dialog>
+            <modal
+                :title="title" :show.sync="showModal"
+                :word-total-size = "totalSize"
+                :word-list = "modalWordList"
+                @on-edit-done="handleEditDone"
+                @on-word-delete="handleDeleteClick"
+                @on-page-click = "handleWordPageClick"
+                @on-input-change= "handleModalInput"></modal>
+            <dialog :category="category" :topic="topic" :title="title"
+                :show.sync="showCreateModal"
+                @on-word-create="handleWordCreate"></dialog>
+
+
         </div>
 
 </template>
@@ -39,6 +48,9 @@ import {server_path} from "../../../Constants/serverUrl.js";
 
 import PopModal from "../PopModal/PopModal";
 import PopDialog from "../PopDialog/PopDialog";
+
+let sentWordRequest = {"get":null,"update":null,"delete":null,"patch":null};
+
 export default {
 
   name:"Card",
@@ -55,31 +67,17 @@ export default {
     return {
       order:"freq",
       wordList:[],
+      modalWordList:[],
       showModal:false,
-      showCreateModal:false
+      showCreateModal:false,
+      totalSize:pageSize,
+      sentWordRequest:{"get":null,"update":null,"delete":null,"patch":null}
     }
   },
 
   ready () {
 
       this.fetchServerData();
-      /*
-      this.fetchData({category:this.category},function(response){
-        //let data = response.json().wordList;
-        let category = interfaceTransform[this.category];
-
-        //this.wordList = data[category];
-        this.wordList = response.json().wordList;
-        this.totalSize = response.json().totalSize;
-        let length = wordCount["downPush words"];
-
-        this.$dispatch("child-wordList",
-            {
-              [category]:this.wordList.length<length?this.wordList:this.wordList.slice(length)
-            })
-      });
-      */
-
 
     },
 
@@ -101,10 +99,15 @@ export default {
         {
           params:data,
           before(request){
-            if(this.previousRequest){
-              this.previousRequest.abort();
+            // if(this.previousRequest){
+            //   this.previousRequest.abort();
+            // }
+            // this.previousRequest = request;
+            if(this.sentWordRequest["get"]){
+              console.log("sentRequest",this.sentWordRequest["get"]);
+              this.sentWordRequest["get"].abort();
             }
-            this.previousRequest = request;
+            this.sentWordRequest["get"] =request;
           }
         })
           .then(callback,(err)=>{
@@ -112,12 +115,32 @@ export default {
           });
     },
 
+
+    // fetchWordData(paramsBody={}){
+    //   this.fetchData((response)=>{
+
+    //   },paramsBody);
+    //   var finalData = Object.assign({},defaultParams,paramsBody);
+    //   this.$http.get(server_path+"/title",
+    //     {
+    //       params:finalData,
+    //       before(request){
+    //         // console.log("this ",this.previousRequest,sentRequest["get"]);
+    //         if(sentWordRequest["get"]){
+    //           sentWordRequest["get"].abort();
+    //         }
+    //         sentWordRequest["get"] =request;
+    //         // this.previousRequest = request;
+    //       }
+    //     })
+    //       .then(callback,(err)=>{
+    //           console.log("请求服务器失败");
+    //       });
+    // },
+    //每个card刚出来的时候的数据，同时更新下发词
     fetchServerData(){
         this.fetchData(function(response){
-        //let data = response.json().wordList;
-        //let category = interfaceTransform[this.category];
 
-        //this.wordList = data[category];
             this.wordList = response.json().wordList;
             var size;
             if(size = response.json.totalSize)
@@ -132,11 +155,102 @@ export default {
           });
     },
 
+
+
+    handleEditDone(postBody){
+      var data = {
+        category:this.category,
+        action:"patch"
+      }
+      var finalData = Object.assign({},data,postBody);
+       this.$http.post(server_path+"/title",finalData,{
+                before(request){
+                    console.log("prev word ",this.previousRequest);
+                    var prevUpdateRequest = sentWordRequest["update"];
+                    if(prevUpdateRequest && (prevUpdateRequest.body.prevWord==request.body.prevWord)){
+                        prevUpdateRequest.abort();
+                    }
+                    sentWordRequest["update"] =request;
+                    // this.previousRequest = request;
+                }
+          }).then(response=>{
+            console.log("更新成功");
+        },err=> alert("更新失败"))
+    },
+
+    handleDeleteClick(postBody){
+      var data = {
+        category:this.category,
+        action:"delete"
+      }
+      var finalData = Object.assign({},data,postBody);
+      this.$http.post(server_path+"/title",finalData)
+        .then((response)=>{
+              console.log("删除成功");
+          },(err)=>{
+              alert("删除失败");
+          })
+    },
+
+    handleModalInput(paramsBody){
+        this.fetchData((response)=>{
+          console.log("filter成功");
+            let data = response.json().wordList;
+            //let data = response.json()[interfaceTransform[this.category]];
+            this.modalWordList = data.map(word=>{
+              return {
+                editing:false,value:word,content:word
+              }
+            });
+            this.totalSize = response.json().totalSize;
+
+        },paramsBody);
+    },
+
+    handleWordPageClick(params){
+      console.log("-----click page ajax");
+      this.fetchData((response)=>{
+
+          console.log("获取单词列表成功");
+          let data = response.json().wordList;
+          this.modalWordList = data.map(word=>{
+            return {
+              editing:false,value:word,content:word
+            }
+          });
+
+          var size;
+          if(size = response.json().totalSize)
+                  this.wordTotalSize = size;
+
+
+      },params);
+
+    },
+
+    handleWordCreate(word){
+      this.$http.post(server_path+"title",
+          {
+            category: this.category,
+            word:word
+          })
+            .then(response=>{
+                console.log("创建成功");
+            },(err)=>{
+                console.log("创建失败");
+            });
+    },
+
     showDetail(){
+      // this.category = this.category;
       this.showModal = true;
+      console.log("-------show detail");
+      this.handleWordPageClick({pageIndex:1});
+      //handlePageClick
     },
 
     addWord(){
+      // this.category = category;
       this.showCreateModal = true;
     }
   }

@@ -225,6 +225,12 @@ todo:
 2，topic =?           done
 3, hitrate pagination 请求没有发送。 done，待检测
 4, table scroll取消       done
-5, totalSize没显示
-6, title页面的popmodal 中把原有的pagination代码用 pagination组件替换
+5, totalSize没显示           done,没有在data中声明
+6, title页面的popmodal 中把原有的pagination代码用 pagination组件替换   done
+7, filter的时候将pagination切换到第一页，click的时候将那个右边的输入框用计算属性
+8. event 中curId,curEvent合并，成一个curEvent data
+
+
+to solve
+1，模块合并的时候变量冲突？ajax sentRequest?
 

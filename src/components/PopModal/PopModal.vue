@@ -35,7 +35,6 @@
             </div>
 
             <div class="wordList">
-
             </div>
       </div>
       <div class="modal-footer">
@@ -60,35 +59,22 @@ export default {
 
   name:"PopModal",
 
-  props:["category","title","order","show","topic","url","wordTotalSize",
+  props:["title","show","wordTotalSize",
   "wordList"],
 
   data () {
 
     return {
-      // show:show||false,
       toPage:1,
       curPage:1,
       searchContent:"",
       pageList:[1,2,3,4,5],
       totalSize:"",
-      /*
-      wordList:["习近平","测试","测试2","测试3","测试21"].map(word=>{
-        return {
-          editing:false,value:word,content:word
-        }
-      })
-      */
     }
   },
 
   ready () {
-
-      let params = {
-        category:this.category,
-        order:this.order
-      };
-      this.handlePageClick(1);
+      //this.handlePageClick(1);
     },
 
   components:{
@@ -97,40 +83,6 @@ export default {
 
   methods:{
 
-
-    fetchData(params={},callback){
-      console.log("---------in pop modal",this.topic);
-      let defaultParams = {
-        topic: this.topic,
-        pageSize:pageSize,
-        pageIndex:1,
-        category: this.category,
-        orderBy: this.order,
-        desc: true
-      };
-      let data = Object.assign({},defaultParams,params);
-
-      this.$dispatch("fetch-word-list",data);
-/*
-      this.$http.get(this.url,
-        {
-          params:data,
-          before(request){
-            // console.log("this ",this.previousRequest,sentRequest["get"]);
-            if(sentRequest["get"]){
-              sentRequest["get"].abort();
-            }
-            sentRequest["get"] =request;
-            // this.previousRequest = request;
-          }
-        })
-          .then(callback,(err)=>{
-              console.log("请求服务器失败");
-          });
-*/
-    },
-
-
     getfilteredWord(){
         //searchContent
         console.log("----------on change ",this.searchContent);
@@ -138,58 +90,13 @@ export default {
           filter:this.searchContent
         };
 
-
         this.$dispatch("on-input-change",sentData);
-/*
-        let data = Object.assign({},defaultParams,params);
-        this.fetchData({
-          filter: this.searchContent
-        },(response)=>{
-            let data = response.json()[interfaceTransform[this.category]];
-            this.wordList = data.map(word=>{
-              return {
-                editing:false,value:word,content:word
-              }
-            });
-        });
-*/
     },
 
 
     handlePageClick(page){
-/*
-      let defaultParams = {
-        topic: this.topic,
-        pageSize:pageSize,
-        pageIndex:1,
-        category: this.category,
-        orderBy: this.order,
-        desc: true
-      };
-      let data = Object.assign({},defaultParams,
-      {pageIndex:page,filter:this.searchContent});
-*/
       let data = {pageIndex:page,filter:this.searchContent};
       this.$dispatch("on-page-click",data);
-      /*
-      this.fetchData({pageIndex:page,filter:this.searchContent},(response)=>{
-
-        console.log("-----click page ajax");
-        //let data = response.json().wordList[interfaceTransform[this.category]];
-        let data = response.json().wordList;
-        this.wordList = data.map(word=>{
-          return {
-            editing:false,value:word,content:word
-          }
-        });
-
-        var size;
-        if(size = response.json().totalSize)
-                this.totalSize = size;
-
-
-      });
-      */
     },
 
     //deprecated
@@ -199,40 +106,6 @@ export default {
       this.pageList = [0,1,2,3,4].map(index=>{return toPage+index;});
       this.curPage = toPage;
       this.clickPage(toPage);
-    },
-
-    //deprecated
-    clickPage(page){
-      this.curPage = page;
-      //ajax
-      this.fetchData({pageIndex:page,filter:this.searchContent},(response)=>{
-
-        console.log("-----click page ajax");
-        //let data = response.json().wordList[interfaceTransform[this.category]];
-        let data = response.json().wordList;
-        this.wordList = data.map(word=>{
-          return {
-            editing:false,value:word,content:word
-          }
-        });
-
-        var size;
-        if(size = response.json().totalSize)
-                this.totalSize = size;
-
-
-      });
-    },
-
-    //deprecated
-    changePagination(step){
-      //step:[1,-1]
-      if((step===-1 && this.pageList[0]===1)||(step===1 && this.pageList.slice(-1)===this.totalSize))
-        return;
-      this.pageList = this.pageList.map(page=>{
-        return page+step;
-      });
-      this.clickPage(this.curPage+step);
     },
 
     closeModal(){
@@ -245,20 +118,6 @@ export default {
               word:word.content,
           };
       this.$dispatch("on-word-delete",postBody);
-      /*
-      this.$http.post(this.url,
-          {
-              topic: this.topic,
-              category:this.category,
-              word:word.content,
-              action:"delete"
-          }).then((response)=>{
-              console.log("删除成功");
-          },(err)=>{
-              alert("删除失败");
-          })
-          */
-      //delete ajax
     },
 
     editWord(word){
@@ -273,27 +132,6 @@ export default {
         };
 
         this.$dispatch("on-edit-done",requestBody);
-/*
-        this.$http.post(this.url,{
-          topic: this.topic,
-          category:this.category,
-          prevWord:prevWord,
-          newWord:newWord,
-          action:"patch"
-        },{
-                before(request){
-                    console.log("prev word ",this.previousRequest);
-                    var prevUpdateRequest = sentRequest["update"];
-                    if(prevUpdateRequest && (prevUpdateRequest.body.prevWord==request.body.prevWord)){
-                        prevUpdateRequest.abort();
-                    }
-                    sentRequest["update"] =request;
-                    // this.previousRequest = request;
-                }
-          }).then(response=>{
-            console.log("更新成功");
-        },err=> alert("更新失败"))
-*/
     },
 
     doneEdit(index){

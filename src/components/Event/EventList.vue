@@ -42,8 +42,8 @@
 			                    </li>
 			                </ul>
 			                <div class="btn-group">
-				                  <button class="more" @click="showDetail(event.id)">查看详情</button>
-				                  <button class="add" @click="addWord(event.id)">添加词汇</button>
+				                  <button class="more" @click="showDetail(event)">查看详情</button>
+				                  <button class="add" @click="addWord(event)">添加词汇</button>
 			                </div>
                         </td>
                     </tr>
@@ -54,16 +54,14 @@
 		<pagination :total-size="totalSize" @page-click="handlePageClick"></pagination>
     </div>
 
-    <modal :category="category" :topic="topic" url="/event/word"
-    		:title="title" :order="order" :show.sync="showModal"
+    <modal :title="curEvent" :show.sync="showModal"
     		:word-total-size = "wordTotalSize"
     		:word-list = "wordList"
     		@on-edit-done="handleEditDone"
     		@on-word-delete="handleDeleteClick"
     		@on-page-click = "handleWordPageClick"
-    		@fetch-word-list="fetchWordData"
     		@on-input-change= "handleModalInput"></modal>
-    <dialog :category="category" :topic="topic" :title="title"
+    <dialog :category="category" :title="curEvent"
     		:show.sync="showCreateModal"
     		@on-word-create="handleWordCreate"></dialog>
 
@@ -96,7 +94,8 @@ export default {
       showCreateModal:false,
       wordTotalSize:0,
       wordList:[],
-      curId:1
+      curId:1,
+      curEvent:""
     }
   },
   components:{
@@ -148,6 +147,7 @@ export default {
 
     fetchWordData(callback,paramsBody={}){
     	var defaultParams = {
+    		topic:this.topic,
     		id:this.curId,
     		pageIndex:1,
     		pageSize:this.wordTotalSize
@@ -173,6 +173,7 @@ export default {
     handleWordCreate(word){
     	this.$http.post(server_path+"/event/word",
           {
+          	topic: this.topic,
             id:this.curId,
             word:word
           })
@@ -204,15 +205,6 @@ export default {
 
     },
 
-    // changeOption(){
-    // 	var params = searchContent?{filter:searchContent}:{};
-    // 	console.log("-------in parent");
-    // 	this.fetchData((response)=>{
-    // 		this.eventList = response.json().eventList;
-    // 		console.log("请求服务器成功");
-    // 	},params);
-    // },
-
     changeOption(searchContent=""){
     	var params = searchContent?{filter:searchContent}:{};
     	this.fetchData((response)=>{
@@ -226,7 +218,8 @@ export default {
     handleEditDone(postBody){
     	var data = {
     		id:this.curId,
-    		action:"patch"
+    		action:"patch",
+    		topic: this.topic
     	}
     	var finalData = Object.assign({},data,postBody);
     	 this.$http.post(server_path+"/event/word",finalData,{
@@ -262,7 +255,8 @@ export default {
     handleDeleteClick(postBody){
     	var data = {
     		id:this.curId,
-    		action:"delete"
+    		action:"delete",
+    		topic: this.topic
     	}
     	var finalData = Object.assign({},data,postBody);
     	this.$http.post(server_path+"/event/word",finalData)
@@ -280,15 +274,17 @@ export default {
   		},{pageIndex:page});
     },
 
-    showDetail(id){
-    	this.curId = id;
+    showDetail(event){
+    	this.curId = event.id;
+    	this.curEvent = event.name;
       	this.showModal = true;
       	this.handleWordPageClick({pageIndex:1});
 
     },
 
-    addWord(id){
-    	this.id = id;
+    addWord(event){
+    	this.id = event.id;
+    	this.curEvent = event.name;
       	this.showCreateModal = true;
     }
 
