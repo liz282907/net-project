@@ -143,7 +143,7 @@ export default {
 
             this.wordList = response.json().wordList;
             var size;
-            if(size = response.json.totalSize)
+            if(size = response.json().totalSize)
                 this.totalSize = size;
             let length = wordCount["downPush words"];
             console.log("--------length",this.wordList.length<length?this.wordList:this.wordList.slice(0,length));
@@ -231,6 +231,7 @@ export default {
     handleWordCreate(word){
       this.$http.post(server_path+"title",
           {
+            topic: this.topic,
             category: this.category,
             word:word
           })
