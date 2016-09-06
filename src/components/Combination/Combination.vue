@@ -1,9 +1,9 @@
 <template>
-  <div class="hello" @click = "cancleImportBox">
+  <div class="combination-content" @click = "cancleImportBox">
 	<div id="main_container">
 		<div id="input_container" class="p3_container">
-			<div id="title_word" class="p3_word_container">
-				<div class="panel_own panel-success">
+			<div id="title_word" class="p3_word_container ">
+				<div class="panel_own panel-success clearfix">
 					<div class="panel-heading">
 					  <h3 class="panel-title">称谓词</h3>
 					</div>
@@ -15,9 +15,9 @@
 						</ul>
 					</div>
 					<div class="panel_button_container">
-						<input type="text" class="float_right" v-model="title_input" placeholder="添加">
-						<button class="btn btn-sm float_right" @click="addtitle">添加</button>
-						<button id="title" class="btn btn-sm float_right" @click="importWord">导入</button>
+						<button class="btn btn-sm " @click="addtitle">添加</button>
+						<button id="title" class="btn btn-sm" @click="importWord">导入</button>
+						<input type="text"  v-model="title_input" placeholder="添加">
 					</div>
 				</div>
 			</div>
@@ -26,41 +26,45 @@
 				<button class="btn btn-default" @click="makecomb">生成组合词</button>
 			</div>
 
-			<div id="event_word" class="p3_word_container">
+			<div id="event_word" class="p3_word_container clearfix">
 				<div class="panel_own panel-success">
 					<div class="panel-heading">
 					  <h3 class="panel-title">事件词</h3>
 					</div>
 					<div class="panel-body">
-						<ul>
+						<ul class="clearfix">
 							<li v-for="keyword in event_data" class="tag">
 								<span class="label">{{keyword}}</span>
 							</li>
 						</ul>
 					</div>
 					<div class="panel_button_container">
-						<input type="text" class="float_right" v-model="event_input" placeholder="添加">
-						<button class="btn btn-sm float_right" @click="addevent">添加</button>
-						<button id="event" class="btn btn-sm float_right" @click="importWord">导入</button>
+						<button class="btn btn-sm" @click="addevent">添加</button>
+						<button id="event" class="btn btn-sm" @click="importWord">导入</button>
+						<input type="text" v-model="event_input" placeholder="添加">
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div id="output_container" class="p3_container">
+		<div id="output_container" class="p3_container clearfix">
 			<div class="panel_own panel-success">
 				<div class="panel-heading">
 				  <h3 class="panel-title">组合词生成预览</h3>
 				</div>
-				<div class="panel-body">
-					<ul>
+				<div class="panel-body" >
+					<textarea v-if="isEdited" @blur="changeToUl">{{transformedData}}</textarea>
+					<ul v-else class="clearfix">
 						<li v-for="keyword in comb_data" class="tag">
 							<span class="label">{{keyword}}</span>
 						</li>
 					</ul>
 				</div>
-				<div class="panel_button_container">
-					<button class="btn btn-sm float_right" @click="toPYStr">转化繁体</button>
+				<div class="panel_button_container button-group">
+					<button class="btn btn-sm" @click="generateEditData(1)">九宫格</button>
+					<button class="btn btn-sm" @click="generateEditData(2)">计算所</button>
+					<button class="btn btn-sm " @click="generateEditData(3)">yjyy</button>
+					<button class="btn btn-sm" @click="toPYStr">转化繁体</button>
 				</div>
 			  </div>
 		</div>
@@ -89,11 +93,14 @@
 import ImportBox from './ImportBox.vue'
 
 function isIn(array,element){
-	for(var i=0;i<array.length;i++){
-		if(array[i] == element)
-			return true;
-	}
-	return false;
+
+	return array.indexOf(element)!==-1;
+
+	// for(var i=0;i<array.length;i++){
+	// 	if(array[i] == element)
+	// 		return true;
+	// }
+	// return false;
 }
 
 export default {
@@ -111,20 +118,58 @@ export default {
 	    mouseX:0,
 	    mouseY:0,
 		flag:0,
-		whichData:""
+		whichData:"",
+
+		isEdited:false,
+		transformType:1
     }
+  },
+  computed:{
+  	comb_data:function(){
+		return this.makecomb();
+	},
+	transformedData:function(){
+		switch(this.transformType){
+			case 1:{
+				return this.comb_data.join("#");
+				break;
+			}
+			case 2:{
+				console.log("dfd",["称谓词: ",this.title_data.join(" "),"\n",
+				"事件词：",this.event_data.join(" "),"\n"].join(""));
+				return ["称谓词: ",this.title_data.join(" "),"\n",
+				"事件词：",this.event_data.join(" "),"\n"].join("");
+				break;
+			}
+			case 3:{
+				var titleTemp = ["(",
+								this.title_data.map((word)=>{return " "+word+" "}).join("||"),
+								")"].join("");
+				var eventTemp = ["(",
+								this.event_data.map((word)=>{return " "+word+" "}).join("||"),
+								")"].join("");
+				return [titleTemp," && ",eventTemp].join("");
+				break;
+			}
+		}
+	}
+
   },
   components: {
     ImportBox
   },
   methods:{
+  	//comb_data
 	makecomb:function(){
+		var tempData = [];
 		for(var i=0;i<this.title_data.length;i++)
 			for(var j=0;j<this.event_data.length;j++){
-				var temp = this.title_data[i]+"-"+this.event_data[j];
-				if(!isIn(this.comb_data,temp))
-					this.comb_data.push(temp);
+				var temp = this.title_data[i]+" "+this.event_data[j];
+				if(!isIn(tempData,temp))
+					tempData.push(temp);
 			}
+		console.log("tempdata",tempData);
+		return tempData;
 	},
 	addtitle:function(){
 		this.title_data.push(this.title_input);
@@ -150,7 +195,20 @@ export default {
 		if(this.flag != 0)
 			this.s = false;
 		this.flag = 0;
-	}
+	},
+
+	changeToEditing(){
+		this.isEdited = true;
+	},
+
+	changeToUl(){
+		this.isEdited = false;
+	},
+
+	generateEditData(type){
+		this.changeToEditing();
+		this.transformType = parseInt(type);
+	},
   }
 }
 
@@ -174,7 +232,30 @@ function traditionalized(cc){
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
+textarea{
+	outline:none;
+	width:100%;
+	height:100%;
+	min-height:160px;
+}
+
+
+
+.button-group{
+	margin-right:30px;
+	text-align:right;
+
+	button{
+		margin-left:10px;
+	}
+}
+.combination-content{
+	margin-top:30px;
+}
+
+
+
 #main_container{
 	width:100%;
 	height:800px;
@@ -201,28 +282,26 @@ function traditionalized(cc){
 }
 
 .panel_own{
-	position:relative;
 	height:100%;
 	border:1px solid black;
-	box-shadow: 3px 3px 3px;
 	border-radius:5px;
+	display:flex;
+	flex-direction:column;
 }
 
 .panel_button_container{
-	position:absolute;
 	width:100%;
-	bottom:0;
-	height:4rem;
-	padding-top:0.8rem;
+	line-height:46px;
+	padding-left:8px;
+
+
 }
 
 .panel-body{
-	position:absolute;
+	min-height:100px;
+	flex:1;
 	width:100%;
-	bottom:4rem;
-	top:3rem;
-	border-bottom:2px solid black;
-	overflow:auto;
+	border-bottom:1px solid black;
 }
 
 .tag{

@@ -25,10 +25,22 @@ export default {
   data () {
 
     return {
-      toPage:1,
+      //toPage:1,
       curPage:1,
       pageList:[1,2,3,4,5],
     }
+  },
+
+  computed:{
+
+      toPage:{
+        get:function(){
+          return this.curPage;
+        },
+        set:function(page){
+          this.curPage = page;
+        }
+      }
   },
 
   ready () {
@@ -86,7 +98,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .pagination,.input-wrapper{
         display: inline-block;
         vertical-align: middle;

@@ -228,8 +228,9 @@ totalSize:10                 //here
 4. table scroll取消       done
 5. totalSize没显示           done,没有在data中声明
 6. title页面的popmodal 中把原有的pagination代码用 pagination组件替换   done
-7. filter的时候将pagination切换到第一页，click的时候将那个右边的输入框用计算属性
-8. event 中curId,curEvent合并，成一个curEvent data
+7. filter的时候将pagination切换到第一页，
+8. click的时候将那个右边的输入框用计算属性             done
+9. event 中curId,curEvent合并，成一个curEvent data
 
 
 ### to solve:
