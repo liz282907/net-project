@@ -133,3 +133,9 @@
 
 
             @fetch-word-list="fetchWordData"
+
+
+                 <div class="search-box">
+          <input type="text"  placeholder="搜索">
+          <button type="submit" class="btn btn-default">搜索</button>
+      </div>

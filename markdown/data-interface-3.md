@@ -231,6 +231,14 @@ totalSize:10                 //here
 7. filter的时候将pagination切换到第一页，
 8. click的时候将那个右边的输入框用计算属性             done
 9. event 中curId,curEvent合并，成一个curEvent data
+10. 分页数字列表小于 totalSize的时候禁用   done      
+11. 事件词 分类+all           done
+12.  组合词格式               done
+13.  低危词数目不对           done
+14.  计算所格式 分栏          half done，无法blur还原
+15.  组合词添加 多次触发
+16.  繁体                     
+17.  事件词 pageSize id 应该是事件类型的id   done
 
 
 ### to solve:

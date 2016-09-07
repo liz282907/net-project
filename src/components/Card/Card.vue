@@ -150,7 +150,7 @@ export default {
 
             this.$dispatch("child-wordList",
                 {
-                  [this.category]:this.wordList.length<length?this.wordList:this.wordList.slice(length)
+                  [this.category]:this.wordList.length<length?this.wordList:this.wordList.slice(0,length)
                 })
           });
     },

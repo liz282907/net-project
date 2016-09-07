@@ -9,7 +9,7 @@
       </div>
       <div class="modal-body">
             <label>关键词</label>
-            <input type="text" v-model="content" />
+            <input type="text" v-model="content" @keyup.13="createWord"/>
 
       </div>
       <div class="modal-footer">

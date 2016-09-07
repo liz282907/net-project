@@ -53,18 +53,29 @@
 				  <h3 class="panel-title">组合词生成预览</h3>
 				</div>
 				<div class="panel-body" >
-					<textarea v-if="isEdited" @blur="changeToUl">{{transformedData}}</textarea>
-					<ul v-else class="clearfix">
+					<ul v-if="notEditing.jian" class="clearfix">
 						<li v-for="keyword in comb_data" class="tag">
 							<span class="label">{{keyword}}</span>
 						</li>
 					</ul>
+					<div v-else :class="['textarea-wrapper',onePart.jian?'':'two-column' ]" @blur.stop="changeToUl(1)" tabindex="1">
+						<textarea v-if="onePart.jian" >{{transformedData.jian}}</textarea>
+						<template v-else >
+							<div >
+								<h4>称谓词</h4>
+								<textarea >{{transformedData.jian.title}}</textarea>
+							</div>
+							<div>
+								<h4>事件词</h4>
+								<textarea >{{transformedData.jian.event}}</textarea>
+							</div>
+						</template>
+					</div>
 				</div>
 				<div class="panel_button_container button-group">
-					<button class="btn btn-sm" @click="generateEditData(1)">九宫格</button>
-					<button class="btn btn-sm" @click="generateEditData(2)">计算所</button>
-					<button class="btn btn-sm " @click="generateEditData(3)">yjyy</button>
-					<button class="btn btn-sm" @click="toPYStr">转化繁体</button>
+					<button class="btn btn-sm" @click="generateEditData(1,1)">九宫格</button>
+					<button class="btn btn-sm" @click="generateEditData(1,2)">计算所</button>
+					<button class="btn btn-sm " @click="generateEditData(1,3)">yjyy</button>
 				</div>
 			  </div>
 		</div>
@@ -74,12 +85,30 @@
 				<div class="panel-heading">
 				  <h3 class="panel-title">繁体组合词生成预览</h3>
 				</div>
-				<div class="panel-body">
-					<ul>
+				<div class="panel-body" >
+					<ul v-if="notEditing.fan" class="clearfix">
 						<li v-for="keyword in fan_comb_data" class="tag">
 							<span class="label">{{keyword}}</span>
 						</li>
 					</ul>
+					<div v-else :class="['textarea-wrapper',onePart.fan?'':'two-column' ]" @blur.stop="changeToUl(2)" tabindex="1">
+						<textarea v-if="onePart.fan" >{{transformedFanData}}</textarea>
+						<template v-else >
+							<div >
+								<h4>称谓词</h4>
+								<textarea >{{transformedFanData.title}}</textarea>
+							</div>
+							<div>
+								<h4>事件词</h4>
+								<textarea >{{transformedFanData.event}}</textarea>
+							</div>
+						</template>
+					</div>
+				</div>
+				<div class="panel_button_container button-group">
+					<button class="btn btn-sm" @click="generateEditData(2,1)">九宫格</button>
+					<button class="btn btn-sm" @click="generateEditData(2,2)">计算所</button>
+					<button class="btn btn-sm " @click="generateEditData(2,3)">yjyy</button>
 				</div>
 			  </div>
 			</div>
@@ -102,7 +131,7 @@ function isIn(array,element){
 	// }
 	// return false;
 }
-
+let wordTypeDict = {"1":"jian","2":"fan"};
 export default {
   data () {
     return {
@@ -110,7 +139,7 @@ export default {
 		title_data:["习近平","习大大"],
 		event_data:["G20","祝寿"],
 		comb_data:[],
-		fan_comb_data:[],
+		// fan_comb_data:[],
 		title_input:"",
 		event_input:"",
 		s:false,
@@ -120,39 +149,92 @@ export default {
 		flag:0,
 		whichData:"",
 
-		isEdited:false,
-		transformType:1
+
+		notEditing:{
+			jian:true,
+			fan:true
+		},
+		//格式类型
+		transformType:{
+			jian:1,
+			fan:1
+		},
     }
   },
   computed:{
   	comb_data:function(){
 		return this.makecomb();
 	},
-	transformedData:function(){
-		switch(this.transformType){
+	fan_comb_data:function(){
+		return this.toFan(this.comb_data);
+	},
+	onePart:function(){
+		return {
+			jian:this.transformType.jian===2?false:true,
+			fan:this.transformType.fan===2?false:true
+		}
+	},
+	transformedFanData:function(){
+		switch(this.transformType.fan){
 			case 1:{
-				return this.comb_data.join("#");
+				return this.toFan(this.comb_data).join("#")
 				break;
 			}
 			case 2:{
-				console.log("dfd",["称谓词: ",this.title_data.join(" "),"\n",
-				"事件词：",this.event_data.join(" "),"\n"].join(""));
-				return ["称谓词: ",this.title_data.join(" "),"\n",
-				"事件词：",this.event_data.join(" "),"\n"].join("");
+				return {
+						title:this.toFan(this.title_data).join(" "),
+						event:this.toFan(this.event_data).join(" ")
+					}
 				break;
 			}
 			case 3:{
-				var titleTemp = ["(",
-								this.title_data.map((word)=>{return " "+word+" "}).join("||"),
-								")"].join("");
-				var eventTemp = ["(",
-								this.event_data.map((word)=>{return " "+word+" "}).join("||"),
-								")"].join("");
-				return [titleTemp," && ",eventTemp].join("");
+				var fanTitleTemp = this.generateYjyyData(this.toFan(this.title_data));
+				var faneventTemp = this.generateYjyyData(this.toFan(this.event_data));
+				return [fanTitleTemp," && ",faneventTemp].join("");
 				break;
 			}
 		}
-	}
+	},
+	transformedData:function(){
+		switch(this.transformType.jian){
+			case 1:{
+				return {
+					jian:this.comb_data.join("#"),
+					fan: this.toFan(this.comb_data).join("#")
+				}
+				break;
+			}
+			case 2:{
+				return {
+					jian:{
+						title:this.title_data.join(" "),
+						event:this.event_data.join(" ")
+					},
+					fan:{
+						title:this.toFan(this.title_data).join(" "),
+						event:this.toFan(this.event_data).join(" ")
+					}
+				}
+				break;
+			}
+			case 3:{
+				var titleTemp = this.generateYjyyData(this.title_data);
+				var eventTemp = this.generateYjyyData(this.event_data);
+				var fanTitleTemp = this.generateYjyyData(this.toFan(this.title_data));
+				var faneventTemp = this.generateYjyyData(this.toFan(this.event_data));
+				[titleTemp," && ",eventTemp].join("");
+				return {
+					jian:[titleTemp," && ",eventTemp].join(""),
+					fan:[fanTitleTemp," && ",faneventTemp].join("")
+				}
+				break;
+			}
+			default:{
+				return {
+				}
+			}
+		}
+	},
 
   },
   components: {
@@ -168,7 +250,6 @@ export default {
 				if(!isIn(tempData,temp))
 					tempData.push(temp);
 			}
-		console.log("tempdata",tempData);
 		return tempData;
 	},
 	addtitle:function(){
@@ -177,11 +258,19 @@ export default {
 	addevent:function(){
 		this.event_data.push(this.event_input);
 	},
+	//deprecated
 	toPYStr:function(){
 		for(var i=0;i<this.comb_data.length;i++){
 			this.fan_comb_data.push(traditionalized(this.comb_data[i]));
 		}
 	},
+
+	toFan:function(arr){
+		return arr.map(word=>{return traditionalized(word);})
+	},
+
+
+
 	importWord:function(e){
 		this.mouseX = e.clientX;
 		this.mouseY = e.clientY;
@@ -197,18 +286,37 @@ export default {
 		this.flag = 0;
 	},
 
-	changeToEditing(){
-		this.isEdited = true;
+	changeToEditing(type){
+		parseInt(type)===1?this.notEditing.jian = false:this.notEditing.fan = false
 	},
 
-	changeToUl(){
-		this.isEdited = false;
+	changeToUl(type){
+		console.log("---------");
+		parseInt(type)===1?this.notEditing.jian = true:this.notEditing.fan = true
+		// this.notEditing = true;
+		// this.isEdited = true;
+		// this.isEdited = false;
 	},
 
-	generateEditData(type){
-		this.changeToEditing();
-		this.transformType = parseInt(type);
+	generateEditData(wordType,formatType){
+
+		this.changeToEditing(wordType);
+		// Object.keys(this.transformType).forEach(type=>{
+		// 	this.transformType[type] = formatType;
+		// })
+		this.transformType[wordTypeDict[wordType]] = formatType;
 	},
+
+	generateYjyyData(arr){
+		return ["(",arr.map((word)=>{return ' \"'+word+'\" '}).join("||"),
+								")"].join("")
+	},
+
+	//deprecated
+	copyToClipboard(){
+
+		window.clipboardData.set("text",this.transformedData);
+	}
   }
 }
 
@@ -237,10 +345,18 @@ textarea{
 	outline:none;
 	width:100%;
 	height:100%;
-	min-height:160px;
+	min-height:100px;
+	font-size:12px;
 }
 
-
+.two-column{
+	-webkit-column-count: 2; /* Chrome, Safari, Opera */
+    -moz-column-count: 2; /* Firefox */
+    column-count: 2;
+    -webkit-column-gap: 40px; /* Chrome, Safari, Opera */
+    -moz-column-gap: 40px; /* Firefox */
+    column-gap: 40px;
+}
 
 .button-group{
 	margin-right:30px;
@@ -250,6 +366,7 @@ textarea{
 		margin-left:10px;
 	}
 }
+
 .combination-content{
 	margin-top:30px;
 }

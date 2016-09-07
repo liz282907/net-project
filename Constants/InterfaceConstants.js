@@ -8,8 +8,9 @@ var wordCount = {
 	"downPush words":10
 };
 var eventTypeList = [
+	{"id":0,"name":"全部"},
 	{"id":1,"name":"出访"},
-	{"id":2,"name":"下基层"},
+	{"id":2,"name":"讲话"},
 	{"id":3,"name":"下基层"},
 	{"id":4,"name":"国际会议"},
 	{"id":5,"name":"批示指示"},

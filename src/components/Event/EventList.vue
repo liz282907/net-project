@@ -3,7 +3,7 @@
           <div class="dropdown form-item">
               <label>搜索事件类型</label>
               <select class="select" id="select" v-model="option" @change="changeOption">
-                  <option v-for="eventType in eventTypeList" :value="eventType.id" $index==1?'selected':''>
+                  <option v-for="eventType in eventTypeList" :value="eventType.id" >
                       {{eventType.name}}
                   </option>
               </select>
@@ -87,7 +87,7 @@ export default {
       topic: this.$parent.topic,
       eventTypeList:eventTypeList,
       order:"freq",
-      option:1,
+      option:0,
       eventList:[],
       totalSize:0,
       showModal:false,
@@ -150,7 +150,7 @@ export default {
     		topic:this.topic,
     		id:this.curId,
     		pageIndex:1,
-    		pageSize:this.wordTotalSize
+    		pageSize:20
     	}
     	var finalData = Object.assign({},defaultParams,paramsBody);
     	this.$http.get(server_path+"/event/word",
@@ -283,7 +283,7 @@ export default {
     },
 
     addWord(event){
-    	this.id = event.id;
+    	this.curId = event.id;
     	this.curEvent = event.name;
       	this.showCreateModal = true;
     }

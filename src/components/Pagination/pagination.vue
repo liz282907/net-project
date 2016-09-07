@@ -1,7 +1,9 @@
 <template>
         <ul class="pagination pagination-sm">
             <li :class="pageList[0]===1?'disabled':''"><a href="javascrpt:void(0)" @click="changePagination(-1)">&laquo;</a></li>
-            <li v-for="value in pageList" :class="value===curPage?'active':''" @click="clickPage(value)">
+            <li v-for="value in pageList"
+                :class="[value===curPage?'active':'',value>totalSize?'disabled':'']"
+                @click="clickPage(value)">
                 <a href="javascrpt:void(0)">{{value}}</a>
             </li>
             <li><a href="javascrpt:void(0)">...</a></li>

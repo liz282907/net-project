@@ -1,9 +1,6 @@
 <template>
   <div class="global-actions clearfix" >
-      <div class="search-box">
-          <input type="text"  placeholder="搜索">
-          <button type="submit" class="btn btn-default">搜索</button>
-      </div>
+
 
       <div class="btn-group btn-group-justified file-btn-group">
         <a href="#" class="btn btn-default">批量导入</a>
