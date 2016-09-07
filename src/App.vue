@@ -49,6 +49,7 @@ export default {
   data(){
     return {
         navList:[
+          {name:"主题选择",url:"/theme"},
           {name:"称谓词",url:"/title"},
           {name:"事件词",url:"/event"},
           {name:"组合词",url:"/combination"},
@@ -56,7 +57,7 @@ export default {
         ],
         curIndex:0,
         curUser:"陈璐",
-        topic:"习近平"
+        topic:""
     }
   },
   methods:{

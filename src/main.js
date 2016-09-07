@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import App from './App';
+import Theme from './components/Theme/Theme';
 import Title from "./components/Title/Title";
 import Event from "./components/Event/Event";
 import Combination from "./components/Combination/Combination";
@@ -17,6 +18,9 @@ Vue.use(VueResource);
 const router = new VueRouter();
 
 router.map({
+	"/theme":{
+		component:Theme
+	},
 	"/title":{
 		component:Title
 	},
@@ -40,7 +44,7 @@ router.map({
 });
 
 router.redirect({
-  '*': '/title',
+  '*': '/theme',
   '/event':'/event/list'
 })
 
