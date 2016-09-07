@@ -253,10 +253,12 @@ export default {
 		return tempData;
 	},
 	addtitle:function(){
-		this.title_data.push(this.title_input);
+		if(this.title_input)
+			this.title_data.push(this.title_input);
 	},
 	addevent:function(){
-		this.event_data.push(this.event_input);
+		if(this.event_input)
+			this.event_data.push(this.event_input);
 	},
 	//deprecated
 	toPYStr:function(){
