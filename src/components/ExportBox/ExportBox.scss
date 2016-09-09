@@ -1,0 +1,166 @@
+@import "../../assets/stylesheets/variables.scss";
+
+a{
+    text-decoration: none;
+}
+button{display: inline-block;}
+
+$center-margin: 10px;
+
+.center-parent{
+    display: flex;
+    margin-left: $center-margin;
+}
+.center-child{
+    flex:1;
+    margin-left: $center-margin;
+}
+
+/*********************universal style***********************/
+
+h4,label,option,a,button{
+     font-family: "Microsoft Yahei";
+}
+h4{
+    font-size: 16px;
+
+}
+
+.modal{
+    display: block;
+    background-color: rgba(11, 11, 11, 0.6);
+    .modal-dialog{
+        width: 60%;
+        .modal-content{
+            // height: 500px;
+            width: 100%;
+        }
+    }
+}
+
+
+.modal-body{
+    min-height: 200px;
+    width: 100%;
+    .left-part{
+        float: left;
+        margin-right: 20px;
+        width: 25%;
+        .shown-select{
+            height: 250px;
+            overflow: auto;
+        }
+    }
+    .right-part{
+        // display: inline-block;
+        overflow: hidden;
+        display: flex;
+        flex-direction:column;
+        .filter-radios{
+            line-height: 30px;
+        }
+        textarea{
+            width: 100%;
+            flex:1;
+            min-height: 150px;
+        }
+        .dropdown-group{
+
+            // height: 200px;
+        }
+    }
+}
+
+.filter-radios{
+        @extend .center-parent;
+        .radio-item{
+            @extend .center-child;
+        }
+    }
+.input-wrapper{
+    margin-top: 20px;
+    input{
+        display: inline-block;
+    }
+}
+
+.dropdown-group{
+    width: 100%;
+    display: flex;
+    .dropdown+.dropdown{margin-left: 20px;}
+    .dropdown{
+        display: block;
+        flex:1;
+        // min-width: 40%;
+        height: 200px;
+        display: flex;
+        .dropdown-left{
+            display: inline-block;
+            position: relative;
+            flex:1;
+        }
+        button{
+            width: 100px;
+        }
+
+
+        .dropdown-toggle{
+            // box-sizing:border-box;
+            display: inline-block;
+            // position: relative;
+            // width: 100%;
+            // text-align: center;
+
+            // line-height: 40px;
+            padding: 15px 10px;
+        }
+        .dropdown-items{
+            position: absolute;
+            padding: 0 10px;
+            top: 50px;
+            left: 0;
+
+        }
+        .caret{
+            // position: absolute;
+            // right: 30%;
+            // top: 50%;
+            // transform:translateY(-50%);
+
+            margin-left: 10px;
+        }
+
+    }
+
+}
+.dropdown-items{
+    display: none;
+    border-radius: 5px;
+    box-shadow:0 1px 4px rgba(0, 0, 0, 0.3);
+    a{
+        width: 100%;
+        display: inline-block;
+        color:#666;
+        line-height: 1.5;
+    }
+    .item{
+        width: 200px;
+        display: inline-block;
+        border-bottom: 1px solid #e5e5e5;
+        padding: 10px 8px;
+        cursor: pointer;
+        &:hover,&:focus{
+            background-color: #2196f3;
+            color: #fff;
+            }
+        }
+}
+.dropdown-left:focus .dropdown-items{
+    display: block;
+}
+
+
+.option{
+    font-size: 12px;
+    padding: 5px 7px;
+}

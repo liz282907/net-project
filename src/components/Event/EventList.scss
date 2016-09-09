@@ -1,6 +1,19 @@
 @import "../../assets/stylesheets/variables.scss";
 @import "../../assets/stylesheets/reset.scss";
 
+/***************************reset************************/
+
+.togglebtn-wrapper{
+    label{
+       margin-bottom: 0;
+       padding: 0;
+    }
+}
+
+
+
+
+
 /*********************variables***********************/
 
 $panel-margin: 30px;
@@ -94,3 +107,28 @@ $center-margin: 10px;
 .pagination-wrapper{
     float: right;
 }
+
+.togglebtn-wrapper{
+    position: absolute;
+    .export{
+        margin-left: 14px;
+        padding: 0;
+    }
+
+}
+
+
+// .togglebtn-wrapper{
+//     position: relative;
+//     &:before{
+//         position: absolute;
+//         left: -20px;
+//         top: -50%;
+//         background: #aaa;
+//         width: 2px;
+//         height: 200%;
+//         content:"";
+//         display: block;
+//     }
+
+// }

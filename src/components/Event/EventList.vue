@@ -1,4 +1,5 @@
 <template>
+
     <div class="form-box clearfix">
           <div class="dropdown form-item">
               <label>搜索事件类型</label>
@@ -24,7 +25,13 @@
         <div class="search-wrapper form-item">
           	<search placeholder="搜索" @child-search-change='changeOption'></search>
         </div>
+        <div class="togglebtn-wrapper">
+	    	<togglebtn @toggle-edit="toggleTableToEdit" ></togglebtn>
+	    	<button v-show="isEditing" class="export" @click="exportWords">导出</button>
+	    </div>
+
     </div>
+
     <div class="table-wrapper">
             <table class="my-table">
                 <thead>
@@ -32,7 +39,10 @@
                 </thead>
                 <tbody>
                     <tr v-for="event in eventList">
-                    	<td>{{$index+1}}</td>
+                    	<td v-show="!isEditing"">{{$index+1}}</td>
+                    	<td v-else>
+                    		<input type="checkbox" :value="event.id" v-model="chosenEvents"/>
+                    	</td>
                         <td>{{event.name}}
                         </td>
                         <td>
@@ -64,6 +74,11 @@
     <dialog :category="category" :title="curEvent"
     		:show.sync="showCreateModal"
     		@on-word-create="handleWordCreate"></dialog>
+    <exportbox title="导出事件词"
+      :word-list= "eventWordList"
+      :show.sync="showExportBox"
+      :package-list = "packageList"
+      @export-to-sys = "exportToSys"></exportbox>
 
 
 
@@ -75,11 +90,15 @@ import Search from "../Search/Search";
 import Pagination from "../Pagination/pagination";
 import PopModal from "../PopModal/PopModal";
 import PopDialog from "../PopDialog/PopDialog";
+import ToggleButton from "../ToggleButton/ToggleButton";
+import ExportBox from "../ExportBox/ExportBox";
 
 import {server_path} from "../../../Constants/serverUrl.js";
 import {eventTypeList,pageSize,wordSize} from "../../../Constants/InterfaceConstants.js";
+import {isArrEqual} from "../../utils/util.js";
 
 let sentWordRequest = {"get":null,"update":null,"delete":null,"patch":null};
+let lastChosenEvents = [];
 
 export default {
   data () {
@@ -92,24 +111,32 @@ export default {
       totalSize:0,
       showModal:false,
       showCreateModal:false,
+      showExportBox:false,
       wordTotalSize:0,
       wordList:[],
       curId:1,
-      curEvent:""
+      curEvent:"",
+      isEditing:false,
+      chosenEvents:[],
+      eventWordList:[]
     }
   },
   components:{
     "search":Search,
     "pagination":Pagination,
     "modal":PopModal,
-    "dialog":PopDialog
+    "dialog":PopDialog,
+    "togglebtn":ToggleButton,
+    "exportbox":ExportBox
   },
   ready(){
   		this.fetchData((response)=>{
   			console.log("获取事件列表成功");
   			this.eventList = response.json().eventList;
   			this.totalSize = response.json().totalSize;
+        this.fetchPackageData();
   		});
+
   },
 
   // events:{
@@ -286,7 +313,80 @@ export default {
     	this.curId = event.id;
     	this.curEvent = event.name;
       	this.showCreateModal = true;
+    },
+
+    //checkbox的事件，决定table 的tr是编辑模式还是只读模式
+    toggleTableToEdit(btnState){
+    	this.isEditing = btnState;
+    },
+
+    fetchPackageData(){
+        this.$http.get(server_path+"/theme",
+        {
+          params:{
+            topic : this.topic,
+            value : "package"
+          },
+          before(request){
+            if(sentWordRequest["get"]){
+              sentWordRequest["get"].abort();
+            }
+            sentWordRequest["get"] =request;
+          }
+        })
+          .then((response)=>{
+            console.log("packages",response.json().packages);
+              this.packageList = response.json().packages;
+          },(err)=>{
+              console.log("请求服务器失败");
+          });
+    },
+
+    resetExportData(){
+      this.eventWordList = [];
+      this.packageList = [];
+    },
+
+    exportWords(){
+
+      if(this.chosenEvents.length>0)
+        this.showExportBox = true;
+
+      if(isArrEqual(this.chosenEvents,lastChosenEvents))
+          return;
+      // else
+      //   this.resetExportData();
+        // this.fetchPackageData();
+        this.$http.get(server_path+"/event/word",
+        {
+          params:{
+            ids: this.chosenEvents
+          }
+        })
+          .then((response)=>{
+
+              this.eventWordList = response.json().wordList;
+              console.log("----------response-",this.eventWordList);
+          },(err)=>{
+              console.log("请求服务器失败");
+          });
+
+    },
+
+    exportToSys(data){
+      var postBody = Object.assign({},data,{
+        action:"push",
+        topic:this.topic
+      });
+      this.$http.post(server_path+"/transfer",postBody)
+           .then(response=>{
+                console.log("推送到系统成功");
+            },(err)=>{
+                console.log("推送到系统失败");
+            });
+
     }
+
 
 
 

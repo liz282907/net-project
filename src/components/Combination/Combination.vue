@@ -124,12 +124,6 @@ import ImportBox from './ImportBox.vue'
 function isIn(array,element){
 
 	return array.indexOf(element)!==-1;
-
-	// for(var i=0;i<array.length;i++){
-	// 	if(array[i] == element)
-	// 		return true;
-	// }
-	// return false;
 }
 let wordTypeDict = {"1":"jian","2":"fan"};
 export default {
@@ -418,6 +412,7 @@ textarea{
 
 .panel-body{
 	min-height:100px;
+	overflow:auto;
 	flex:1;
 	width:100%;
 	border-bottom:1px solid black;

@@ -83,6 +83,11 @@ app.get("/event",function(req,res){
     res.json(eventWords);
 });
 
+app.post("/event",function(req,res){
+   var titleWords = JSON.stringify({"msg":"success"});
+    res.json(titleWords);
+});
+
 app.get("/event/word",function(req,res){
     var eventWords = JSON.parse(fs.readFileSync("./mock/event_wordList.json"));
     res.json(eventWords);
@@ -91,6 +96,10 @@ app.get("/event/word",function(req,res){
 app.post("/event/word",function(req,res){
     var titleWords = JSON.stringify({"msg":"success"});
     res.json(titleWords);
+});
+app.get("/theme",function(req,res){
+   var packageWords = JSON.parse(fs.readFileSync("./mock/packageWord.json"));
+    res.json(packageWords);
 });
 
 

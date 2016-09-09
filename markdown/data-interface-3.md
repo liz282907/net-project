@@ -240,6 +240,11 @@ totalSize:10                 //here
 16.  繁体                     
 17.  事件词 pageSize id 应该是事件类型的id   done
 
+---
+
+新需求
+todo 当没有一个选中时,pop,或者shake
+
 
 ### to solve:
 1，模块合并的时候变量冲突？ajax sentRequest?
