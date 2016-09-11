@@ -139,3 +139,23 @@
           <input type="text"  placeholder="搜索">
           <button type="submit" class="btn btn-default">搜索</button>
       </div>
+
+
+
+                <li><a href="#" target="_blank">Home</a></li>
+           <li class="has-sub">
+             <a class="has-sub-li" tabindex="1">Menus</a>
+              <ul style="display: block;">
+              <li ><a href="#" class="chosen-tick">Menu 1<i >&#10003</i></a>
+                 </li>
+                 <li><a href="#">Menu 2</a></li>
+              </ul>
+           </li>
+           <li><a href="#">Settings</a></li>
+           <li><a href="#">Contact</a></li>
+
+      </ul>
+
+                     <li v-else><a href="#">Menu 2</a></li>
+
+                     :class="['has-sub', paperPackage===curPackage?'open':'' ]"

@@ -1,0 +1,19 @@
+[
+    {
+        "source":"预制拦截",
+        "paperList":[
+            {"title":"文章一","sourcesite":"","content":"..."},
+            {"title":"文章2","sourcesite":"","content":"..."},
+            {"title":"文章3","sourcesite":"","content":"..."}
+        ]
+    },
+    {
+        "source":"不忘初心",
+        "paperList":[
+            {"title":"文章一","sourcesite":"","content":"..."},
+            {"title":"文章2","sourcesite":"","content":"..."},
+            {"title":"文章3","sourcesite":"","content":"..."},
+            {"title":"文章4","sourcesite":"","content":"..."}
+        ]
+    }
+]

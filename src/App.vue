@@ -54,6 +54,7 @@ export default {
           {name:"事件词",url:"/event"},
           {name:"组合词",url:"/combination"},
           {name:"命中率统计",url:"/hitRate"},
+          {name:"事件词抽取",url:"/extract"},
         ],
         curIndex:0,
         curUser:"陈璐",

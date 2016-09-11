@@ -107,6 +107,12 @@ app.post("/transfer",function(req,res){
     res.json(packageWords);
 });
 
+app.get("/paper",function(req,res){
+   var paperList = JSON.parse(fs.readFileSync("./mock/paperList.json"));
+    res.json(paperList);
+});
+
+
 
 
 

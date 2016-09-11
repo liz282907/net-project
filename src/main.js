@@ -5,6 +5,7 @@ import Title from "./components/Title/Title";
 import Event from "./components/Event/Event";
 import Combination from "./components/Combination/Combination";
 import HitRate from "./components/HitRate/HitRate";
+import ExtractPaper from "./components/ExtractPaper/ExtractPaper";
 
 import EventList from "./components/Event/EventList";
 import NewEvent from "./components/Event/NewEvent";
@@ -40,6 +41,9 @@ router.map({
 	},
 	"/hitRate":{
 		component: HitRate
+	},
+	"/extract":{
+		component: ExtractPaper
 	}
 });
 
