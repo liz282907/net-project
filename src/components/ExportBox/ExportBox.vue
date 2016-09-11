@@ -10,12 +10,13 @@
       <div class="modal-body clearfix">
           <div class="left-part">
               <h4>关键词包</h4>
-              <select multiple="" class="form-control shown-select" >
-                  <option class="option" v-for="package in packageList">{{package}}</option>
+              <select class="form-control shown-select" multiple="" v-model="chosenPackage">
+                  <option class="option" v-for="package in packageList" :value="package">
+                      {{package}}
+                  </option>
               </select>
               <div class="input-wrapper">
-                  <input type="text" v-model="keyPackage" />
-                  <button @click="addPackage">添加</button>
+                  <input type="text" v-model="keyPackage" placeholder="添加词包" @keyup.13="addPackage"/>
               </div>
           </div>
           <div class="right-part">
@@ -102,7 +103,9 @@ export default {
       sysTypes:sysTypes,
       chosenFileType:"",
       chosenSysType:{},
-      transformedData:""
+      chosenPackage:"",
+      transformedData:"",
+      keyPackage:""
 
     }
   },
@@ -161,20 +164,24 @@ export default {
     },
     addPackage(){
       this.packageList.push(this.keyPackage);
+      console.log("添加成功",this.packageList);
     },
     exportToSys(){
       var data = {
         sys: this.chosenSysType.name,
-        package:this.keyPackage,
+        package:this.chosenPackage[0],
         wordList:this.wordList
       };
-      this.$http.dispach("export-to-sys",data);
+
+      this.chosenSysType = {};
+      this.$dispatch("export-to-sys",data);
     },
     exportToFile(){
       var data = {
         content:this.transformedData
       };
-      this.$http.dispach("export-to-file",data);
+      this.chosenFileType = "",
+      this.$dispatch("export-to-file",data);
     }
 
 

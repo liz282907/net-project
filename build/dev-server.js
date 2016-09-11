@@ -102,6 +102,11 @@ app.get("/theme",function(req,res){
     res.json(packageWords);
 });
 
+app.post("/transfer",function(req,res){
+   var packageWords = JSON.stringify({"msg":"success"});
+    res.json(packageWords);
+});
+
 
 
 

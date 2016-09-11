@@ -104,7 +104,6 @@ export default {
             // }
             // this.previousRequest = request;
             if(this.sentWordRequest["get"]){
-              console.log("sentRequest",this.sentWordRequest["get"]);
               this.sentWordRequest["get"].abort();
             }
             this.sentWordRequest["get"] =request;
@@ -146,7 +145,6 @@ export default {
             if(size = response.json().totalSize)
                 this.totalSize = size;
             let length = wordCount["downPush words"];
-            console.log("--------length",this.wordList.length<length?this.wordList:this.wordList.slice(0,length));
 
             this.$dispatch("child-wordList",
                 {
@@ -165,7 +163,6 @@ export default {
       var finalData = Object.assign({},data,postBody);
        this.$http.post(server_path+"/title",finalData,{
                 before(request){
-                    console.log("prev word ",this.previousRequest);
                     var prevUpdateRequest = sentWordRequest["update"];
                     if(prevUpdateRequest && (prevUpdateRequest.body.prevWord==request.body.prevWord)){
                         prevUpdateRequest.abort();
@@ -208,7 +205,6 @@ export default {
     },
 
     handleWordPageClick(params){
-      console.log("-----click page ajax");
       this.fetchData((response)=>{
 
           console.log("获取单词列表成功");
@@ -245,7 +241,6 @@ export default {
     showDetail(){
       // this.category = this.category;
       this.showModal = true;
-      console.log("-------show detail");
       this.handleWordPageClick({pageIndex:1});
       //handlePageClick
     },

@@ -77,7 +77,7 @@
     <exportbox title="导出事件词"
       :word-list= "eventWordList"
       :show.sync="showExportBox"
-      :package-list = "packageList"
+      :package-list.sync = "packageList"
       @export-to-sys = "exportToSys"></exportbox>
 
 
@@ -118,7 +118,8 @@ export default {
       curEvent:"",
       isEditing:false,
       chosenEvents:[],
-      eventWordList:[]
+      eventWordList:[],
+      packageList:[]
     }
   },
   components:{
@@ -364,9 +365,7 @@ export default {
           }
         })
           .then((response)=>{
-
               this.eventWordList = response.json().wordList;
-              console.log("----------response-",this.eventWordList);
           },(err)=>{
               console.log("请求服务器失败");
           });
@@ -374,6 +373,7 @@ export default {
     },
 
     exportToSys(data){
+      console.log("--------topic",this.topic);
       var postBody = Object.assign({},data,{
         action:"push",
         topic:this.topic
