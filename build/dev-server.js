@@ -112,6 +112,11 @@ app.get("/paper",function(req,res){
     res.json(paperList);
 });
 
+app.post("/paper/words",function(req,res){
+    var wordList = JSON.parse(fs.readFileSync("./mock/event_wordList.json"));
+    res.json(wordList);
+});
+
 
 
 

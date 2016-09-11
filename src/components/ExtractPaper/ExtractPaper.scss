@@ -1,3 +1,8 @@
+@import "../../assets/stylesheets/variables.scss";
+.mycontainer{
+  margin-top: 30px;
+  width: 100%;
+}
 
 ul{
   list-style:none;
@@ -5,13 +10,18 @@ ul{
   padding:0;
 }
 
-.left{
+.my-left{
   width:  240px;
   float: left;
-  overflow: hidden;
+  margin-right: 50px;
+  // overflow: hidden;
 }
-.right{
+.my-right{
   overflow: hidden;
+  font-family: "Microsoft Yahei";
+}
+.content-body{
+  display: inline-block;
 }
 
 
@@ -32,6 +42,9 @@ li{
   li{
     padding:0px 22px;
     background:#49505a;
+  }
+  .sub-menu{
+    display: none;
   }
 }
 .has-sub-li {
@@ -72,8 +85,8 @@ li{
 }
 .open .sub-menu{
 
-  transform:translateY(100%);
-  // display: block;
+  // transform:translateY(100%);
+  display: block;
 }
 .chosen-tick{
   position: relative;
@@ -85,4 +98,61 @@ li{
   }
 }
 
+
+
+/***************************************right part****************************/
+p{
+  display: inline-block;
+}
+.extract-btn{
+  float: right;
+  background: #3ab4a6;
+  color: #fff;
+  padding: 6px 30px;
+  border-radius: 5px;
+  &:hover{
+    background: #43C7B7;
+  }
+}
+$center-margin: 10px;
+
+.center-parent{
+    display: flex;
+    margin-left: $center-margin;
+}
+.center-child{
+    flex:1;
+    margin-left: $center-margin;
+}
+
+.table{
+    width: 100%;
+    margin: 20px auto;
+    table-layout: fixed;
+    th,td{
+        box-sizing:border-box;
+        display: table-cell;
+        padding: 4px 10px;
+        text-align: center;
+    }
+    th{
+        height: 30px;
+        text-align: center;
+    }
+}
+.table-wrapper{
+    display: block;
+}
+.my-table{
+    @extend .table;
+    th {
+        background-color: #3ab4a6;
+        color: white;
+    }
+    tr:hover {background-color: $table-hover}
+    tr:nth-child(even){background-color: $table-even}
+    th:nth-child(1),td:nth-child(1){width: 10%;}
+    th:nth-child(1),th:nth-child(2){border-right: 1px solid #fff;}
+    th:nth-child(2),td:nth-child(2){width: 30%;}
+}
 
