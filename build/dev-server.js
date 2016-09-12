@@ -107,14 +107,19 @@ app.post("/transfer",function(req,res){
     res.json(packageWords);
 });
 
-app.get("/paper",function(req,res){
+app.get("/extract",function(req,res){
    var paperList = JSON.parse(fs.readFileSync("./mock/paperList.json"));
     res.json(paperList);
 });
 
-app.post("/paper/words",function(req,res){
+app.get("/paper/words",function(req,res){
     var wordList = JSON.parse(fs.readFileSync("./mock/event_wordList.json"));
     res.json(wordList);
+});
+
+app.post("/extract",function(req,res){
+    var content = JSON.parse(fs.readFileSync("./mock/paperContent.json"));
+    res.json(content);
 });
 
 

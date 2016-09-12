@@ -7,9 +7,10 @@
              <a class="has-sub-li" tabindex="1">{{paperPackage.system}}</a>
               <ul class="sub-menu">
                 <li v-for="title in paperPackage.titles" @click.prevent.stop="choosePaper(title)">
-                    <a v-show="paper===curPaper"  href="javascript:void(0)"
-                    class="chosen-tick">{{paper}}<i >&#10003</i></a>
-                    <a v-else href="javascript:void(0)">{{paper}}</a>
+                    <a v-show="title==(curPaper.title)"  href="javascript:void(0)"
+                    class="chosen-tick">{{title}}<i >&#10003</i>
+                    </a>
+                    <a v-else href="javascript:void(0)">{{title}}</a>
                 </li>
               </ul>
           </li>
@@ -41,6 +42,15 @@
 
         </div>
         <div class="content-export">
+            <div></div>
+            <button>没有找到关联的事件？</button>
+            <div class="divider"></div>
+            <div class="create-event" v-show="EventNotExists">
+                <input type="text" v-model="keyword" placeholder="事件名称"/>
+                <button>添加</button>
+            </div>
+            <button>导出</button>
+
         </div>
     </div>
 
@@ -63,8 +73,9 @@ export default {
     return {
       paperPackages:[],
       curPackage:{},
-      curPaper:{},
-      wordList:[]
+      curPaper:{title:"",content:""},
+      wordList:[],
+      EventNotExists: true
 
     }
   },
@@ -117,21 +128,25 @@ export default {
 
     //click事件
     choosePaper(title){
-      if(!(this.curPaper.title = paperDict[title]))
+      // this.curPaper.title = paperDict[title];
+
+      if(!paperDict[title]){
         this.fetchPaper(title);
+      }
       else
-        this.curPaper.content = paperDict[title];
+        this.curPaper = {"title":title,"content":paperDict[title]};
     },
 
     //有可能在hover部分
     fetchPaper(title){
-      this.$http.post(server_path+"extract",{
+      this.$http.post(server_path+"/extract",{
           action:"detail",
           title:title
       })
           .then(function(response){
             //loading 层
               paperDict[title] = response.json().content;
+              this.curPaper.content = paperDict[title];
               console.log("获取页面内容成功");
           },function(err){
               console.log("获取页面内容失败");
@@ -139,7 +154,7 @@ export default {
     },
 
     extractWords(){
-      this.$http.post(server_path+"/paper/words")
+      this.$http.get(server_path+"/paper/words")
           .then((response)=>{
             this.wordList = response.json().wordList.map(word=>{
               return {
