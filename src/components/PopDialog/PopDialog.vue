@@ -8,7 +8,12 @@
         <h4 class="modal-title">{{title}}</h4>
       </div>
       <div class="modal-body">
-            <label>关键词</label>
+            <label class="label-tooltip">关键词
+                <i class="my-tooltip">
+                    <span>多个单词之间请用逗号分隔哟</span>
+                </i>
+            </label>
+
             <input type="text" v-model="content" @keyup.13="createWord"/>
 
       </div>
@@ -96,4 +101,46 @@ export default {
     color: #fff;
   }
 }
+.label-tooltip,
+.label-tooltip + input{display:block;}
+.label-tooltip + input{width:100%;}
+
+.my-tooltip{
+  background-image:url(../../assets/images/tooltip_empty.png);
+  width:16px;
+  height:16px;
+  vertical-align:middle;
+  cursor:pointer;
+  display:inline-block;
+  margin-right: 10px;
+  position:relative;
+}
+.my-tooltip:hover span{
+  visibility: visible;
+}
+.my-tooltip span {
+
+    width:180px;
+    position:absolute;
+    top: -20px;
+    left:50%;
+    transform:translate(-10%,-50%);
+    padding:3px 4px;
+
+    font:12px/1.5 "Microsoft Yahei";
+    background-color: #000;
+    color: #fff;
+    opacity: 0.5;
+
+    border-radius:3px;
+    visibility: hidden;
+    -webkit-transition: all 0.5s;
+       -moz-transition: all 0.5s;
+        -ms-transition: all 0.5s;
+         -o-transition: all 0.5s;
+            transition: all 0.5s;
+}
+
+
+
 </style>

@@ -4,18 +4,18 @@
           <li :class="['has-sub', paperPackage===curPackage?'open':'' ]"
             v-for="paperPackage in paperPackages"
             @click="toggleOpen(paperPackage)">
-             <a class="has-sub-li" tabindex="1">{{paperPackage.source}}</a>
+             <a class="has-sub-li" tabindex="1">{{paperPackage.system}}</a>
               <ul class="sub-menu">
-                <li v-for="paper in paperPackage.paperList" @click.prevent.stop="choosePaper(paper)">
+                <li v-for="title in paperPackage.titles" @click.prevent.stop="choosePaper(title)">
                     <a v-show="paper===curPaper"  href="javascript:void(0)"
-                    class="chosen-tick">{{paper.title}}<i >&#10003</i></a>
-                    <a v-else href="javascript:void(0)">{{paper.title}}</a>
+                    class="chosen-tick">{{paper}}<i >&#10003</i></a>
+                    <a v-else href="javascript:void(0)">{{paper}}</a>
                 </li>
               </ul>
           </li>
       </ul>
     <div class="my-right">
-        <div class="content-body">
+        <div class="content-body clearfix">
             <h4>文章内容</h4>
             <p>{{curPaper.content}}</p>
             <button @click="extractWords" class="extract-btn">抽取</button>
@@ -52,14 +52,11 @@
 <script>
 import {server_path} from "../../../Constants/serverUrl.js";
 
+var paperDict = {};
+var getPaperRequest;
 
 
 export default {
-
-  components:{
-
-  },
-
 
   data () {
 
@@ -89,7 +86,7 @@ export default {
   },
 
   ready () {
-    this.fetchPaper();
+    this.fetchTitle();
 
 
 
@@ -97,8 +94,13 @@ export default {
 
   methods:{
 
-    fetchPaper(){
-      this.$http.get(server_path+"/paper")
+    fetchTitle(){
+      this.$http.get(server_path+"/extract",{
+        params:{
+          topic:this.$parent.topic,
+          action:"pull"
+        }
+      })
           .then((response)=>{
             this.paperPackages = response.json();
             console.log("获取列表成功");
@@ -112,8 +114,28 @@ export default {
       else
         this.curPackage = paperPackage;
     },
-    choosePaper(paper){
-      this.curPaper = paper;
+
+    //click事件
+    choosePaper(title){
+      if(!(this.curPaper.title = paperDict[title]))
+        this.fetchPaper(title);
+      else
+        this.curPaper.content = paperDict[title];
+    },
+
+    //有可能在hover部分
+    fetchPaper(title){
+      this.$http.post(server_path+"extract",{
+          action:"detail",
+          title:title
+      })
+          .then(function(response){
+            //loading 层
+              paperDict[title] = response.json().content;
+              console.log("获取页面内容成功");
+          },function(err){
+              console.log("获取页面内容失败");
+          })
     },
 
     extractWords(){

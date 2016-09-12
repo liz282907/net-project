@@ -14,9 +14,9 @@ var rangeList = [
 ];
 
 var sysTypes = [
-	{name:"jgg",zh_name:"九宫格"},
-	{name:"yjyy",zh_name:"鹰击鹰眼"},
-	{name:"jss",zh_name:"计算所"},
+	{name:"yzlj",zh_name:"预置拦截"},
+	{name:"zzyh",zh_name:"九宫格"},
+	{name:"jhss",zh_name:"聚合搜索"},
 ];
 var fileTypes = ["txt"];
 

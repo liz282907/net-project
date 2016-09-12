@@ -58,12 +58,11 @@ export default {
 			return ;
 		}
 
-		var temp = this.keyword.split(" ");
 		this.$http.post(server_path+"/event",
           {
           	name:this.eventname,
 			category:  this.option,
-			wordList: temp,
+			wordList: this.keyword,
           })
             .then(response=>{
                 console.log("创建成功");
