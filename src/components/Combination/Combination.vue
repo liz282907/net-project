@@ -9,7 +9,13 @@
 					</div>
 					<div class="panel-body">
 						<textarea class="" v-model="temp_title_data" :value="temp_title_data"></textarea>
-
+						<!--
+						<ul class="clearfix">
+			              <li v-for="keyword in event_data" class="tag">
+			                <span class="label">{{keyword}}</span>
+			              </li>
+			            </ul>
+			            -->
 					</div>
 					<div class="panel_button_container">
 						<button id="title" class="btn btn-sm" @click="importWord">导入</button>
