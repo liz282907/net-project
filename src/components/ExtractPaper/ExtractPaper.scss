@@ -159,9 +159,70 @@ $center-margin: 10px;
 
 /**************************form 部分*********************************/
 .content-export{
+    width: 100%;
+    margin-top: 30px;
+    display: flex;
+    .export-choice{
+        flex:1;
+        .custom-select{
+            width: 400px;
+            margin:30px auto;
+            position: relative;
+        }
+    }
+    .export-btn{
+      border-left: 2px dashed #F1EBEB;
+      width: 200px;
+    }
+}
+.select-input{
+  border: 1px solid #F1EBEB;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 3px;
+  width: 100%;
+}
+//ul
+.selection{
 
+  position: absolute;
+  width: 100%;
+    max-height: 220px;
+  top: 46px;
+  // border: 1px solid #F1EBEB;
+  // border-radius: 3px;
+  overflow: auto;
+  .select-item{
+    background: none;
+    padding: 6px 10px;
+    box-sizing:border-box;
+    color: #666;
+    cursor: pointer;
+    label{display: inline-block;min-width: 200px;cursor: pointer;}
+  }
+  .select-item:nth-child(2n){
+    background:#f2f2f2;
+  }
+}
+.selection-wrapper{
+  border: 1px solid #f2f2f2;
+  border-radius: 3px;
+  margin-top: 10px;
+  width: 100%;
+}
+.pagination-wrapper{
+    margin-top: 250px;
+    float: right;
+    display: inline-block;
+    margin-bottom: 6px;
 }
 .divider{
   height: 1px;
+  background-color: #f2f2f2;
+  margin-top: 290px;
+  width: 100%;
   // width:
+}
+.create-btn{
+  padding: 5px 7px;
 }

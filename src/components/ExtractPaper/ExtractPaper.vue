@@ -15,44 +15,60 @@
               </ul>
           </li>
       </ul>
-    <div class="my-right">
-        <div class="content-body clearfix">
-            <h4>文章内容</h4>
-            <p>{{curPaper.content}}</p>
-            <button @click="extractWords" class="extract-btn">抽取</button>
-        </div>
-        <div class="content-words">
-            <div class="table-wrapper">
-            <table class="my-table">
-                <thead>
-                  <tr>
-                      <th><input type="checkbox" v-model="chooseAll"/>全选</th><th>关联词汇</th></tr>
-                </thead>
-                <tbody>
-                    <tr v-for="word in wordList">
-                      <td >
-                        <input type="checkbox" v-model="word.checked"/>
-                      </td>
-                        <td>{{word.word}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+      <div class="my-right">
+          <div class="content-body clearfix">
+              <h4>文章内容</h4>
+              <p>{{curPaper.content}}</p>
+              <button @click="extractWords" class="extract-btn">抽取</button>
+          </div>
+          <div class="content-words">
+              <div class="table-wrapper">
+                  <table class="my-table">
+                      <thead>
+                        <tr>
+                            <th><input type="checkbox" v-model="chooseAll"/>全选</th><th>关联词汇</th></tr>
+                      </thead>
+                      <tbody>
+                          <tr v-for="word in wordList">
+                            <td >
+                              <input type="checkbox" v-model="word.checked"/>
+                            </td>
+                              <td>{{word.word}}
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+          <div class="content-export">
+              <div class="export-choice">
+                  <div class="custom-select">
+                        <input type="text" class="select-input" v-model="searchEvent" placeholder="请输入事件名称"
+                          @focus="showDropdown" @change="filterEvents"/>
 
-        </div>
-        <div class="content-export">
-            <div></div>
-            <button>没有找到关联的事件？</button>
-            <div class="divider"></div>
-            <div class="create-event" v-show="EventNotExists">
-                <input type="text" v-model="keyword" placeholder="事件名称"/>
-                <button>添加</button>
-            </div>
-            <button>导出</button>
+                        <div class="selection-wrapper clearfix" v-show="isSelectShown">
+                            <ul class="selection">
+                                <li v-for="event in eventList" class="select-item">
+                                    <input type="radio" :value="event.id" :id="event.name" v-model="chosenEvent" />
+                                    <label :for="event.name">{{event.name}}</label>
+                                </li>
+                            </ul>
+                            <div class="pagination-wrapper">
+                                <pagination :total-size="totalSize" @page-click="handlePageClick"></pagination>
+                            </div>
+                            <div class="divider"></div>
+                            <button class="create-btn">+新建事件</button>
 
-        </div>
-    </div>
+                        </div>
+
+                  </div>
+
+
+              </div>
+              <button class="export-btn">导出</button>
+
+          </div>
+      </div>
 
   </div>
 
@@ -60,10 +76,15 @@
 </template>
 
 <script>
+import Pagination from "../Pagination/pagination";
+
+
 import {server_path} from "../../../Constants/serverUrl.js";
+import {pageSize} from "../../../Constants/InterfaceConstants.js";
+
 
 var paperDict = {};
-var getPaperRequest;
+var getPaperRequest,getEventRequest;
 
 
 export default {
@@ -75,7 +96,13 @@ export default {
       curPackage:{},
       curPaper:{title:"",content:""},
       wordList:[],
-      EventNotExists: true
+      EventNotExists: true,
+      searchEvent:"",
+      eventList:[],
+      chosenEvent:-1,
+
+      totalSize:0,
+      isSelectShown:false
 
     }
   },
@@ -93,18 +120,51 @@ export default {
           word.checked = value;
         })
       }
-    }
+    },
+    // chosenEvent:function(){
+    //   return eventList.filter(event=>{
+    //     return event.chosen;
+    //   })[0];
+    // }
+  },
+
+  components:{
+    "pagination":Pagination
   },
 
   ready () {
     this.fetchTitle();
-
+    this.fetchEvent(1);
 
 
     },
 
   methods:{
 
+    fetchEvent(pageIndex){
+      let defaultParams = {
+        topic:this.$parent.topic,
+        pageSize:6,           //
+        pageIndex:pageIndex,
+        orderBy: "freq",
+        desc: true
+      };
+      this.$http.get(server_path+"/event",
+        {
+          params:defaultParams,
+          before(request){
+            if(getEventRequest)
+              getEventRequest.abort();
+            getEventRequest = request;
+          }
+        })
+          .then((response)=>{
+            this.eventList = response.json().eventList;
+            this.totalSize = response.json().totalSize;
+          },(err)=>{
+              console.log("请求服务器失败");
+          });
+    },
     fetchTitle(){
       this.$http.get(server_path+"/extract",{
         params:{
@@ -118,23 +178,6 @@ export default {
           },(err)=>{
             console.log("获取列表失败");
           })
-    },
-    toggleOpen(paperPackage){
-      if(this.curPackage === paperPackage)
-        this.curPackage = {};
-      else
-        this.curPackage = paperPackage;
-    },
-
-    //click事件
-    choosePaper(title){
-      // this.curPaper.title = paperDict[title];
-
-      if(!paperDict[title]){
-        this.fetchPaper(title);
-      }
-      else
-        this.curPaper = {"title":title,"content":paperDict[title]};
     },
 
     //有可能在hover部分
@@ -153,6 +196,26 @@ export default {
           })
     },
 
+
+    //click事件
+    choosePaper(title){
+      this.curPaper.title = title;
+
+      if(!paperDict[title]){
+        this.fetchPaper(title);
+      }
+      else
+        this.curPaper.content = paperDict[title];
+        // this.curPaper = {"title":title,"content":paperDict[title]};
+    },
+
+    toggleOpen(paperPackage){
+      if(this.curPackage === paperPackage)
+        this.curPackage = {};
+      else
+        this.curPackage = paperPackage;
+    },
+
     extractWords(){
       this.$http.get(server_path+"/paper/words")
           .then((response)=>{
@@ -166,7 +229,22 @@ export default {
           },(err)=>{
             console.log("获取列表失败");
           })
-    }
+    },
+    showDropdown(){
+      this.isSelectShown = true;
+    },
+
+    toggleDropdown(){
+      this.isSelectShown = !this.isSelectShown;
+    },
+
+    filterEvents(){
+
+    },
+
+    handlePageClick(page){
+      this.fetchEvent(page);
+    },
 
 
 

@@ -358,6 +358,7 @@ export default {
       // else
       //   this.resetExportData();
         // this.fetchPackageData();
+        console.log("this.chosenevents",this.chosenEvents);
         this.$http.get(server_path+"/event/word",
         {
           params:{
