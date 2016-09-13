@@ -1,4 +1,7 @@
 @import "../../assets/stylesheets/variables.scss";
+$form-width:400px;
+
+
 .mycontainer{
   margin-top: 30px;
   width: 100%;
@@ -165,7 +168,7 @@ $center-margin: 10px;
     .export-choice{
         flex:1;
         .custom-select{
-            width: 400px;
+            width: $form-width;
             margin:30px auto;
             position: relative;
         }
@@ -226,3 +229,19 @@ $center-margin: 10px;
 .create-btn{
   padding: 5px 7px;
 }
+/*********************create event form control*****************/
+.create-event-control{
+  width: $form-width;
+  margin: 20px auto;
+  display: flex;
+  .select-input{
+
+  }
+  .select{
+      display: inline-block;
+      font-size: 12px;
+      width: 200px;
+      margin-left: 30px;
+  }
+}
+

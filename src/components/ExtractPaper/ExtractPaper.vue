@@ -42,9 +42,10 @@
           </div>
           <div class="content-export">
               <div class="export-choice">
-                  <div class="custom-select">
+                  <div class="custom-select" v-show="EventExists">
                         <input type="text" class="select-input" v-model="searchEvent" placeholder="请输入事件名称"
-                          @focus="showDropdown" @change="filterEvents"/>
+                          @focus="showDropdown" @change="filterEvents"
+                          {{EventExists?'':'disabled'}}/>
 
                         <div class="selection-wrapper clearfix" v-show="isSelectShown">
                             <ul class="selection">
@@ -57,15 +58,26 @@
                                 <pagination :total-size="totalSize" @page-click="handlePageClick"></pagination>
                             </div>
                             <div class="divider"></div>
-                            <button class="create-btn">+新建事件</button>
+                            <button class="create-btn"></button>
 
                         </div>
 
                   </div>
+                  <button class="create-btn" @click="createEvent">+新建事件</button>
+                  <div class="create-event-control" v-show="!EventExists">
+                      <input type="text" class="select-input" v-model="newEventName" placeholder="事件名"
+                      />
+                      <select class="select" id="select" v-model="option">
+                          <option v-for="eventType in eventTypeList" :value="eventType.id" >
+                              {{eventType.name}}
+                          </option>
+                      </select>
+                  </div>
+                  <button style="float:right" @click="cancelCreate" v-show="!EventExists">取消</button>
 
 
               </div>
-              <button class="export-btn">导出</button>
+              <button class="export-btn" @click="exportWords">导出</button>
 
           </div>
       </div>
@@ -80,7 +92,7 @@ import Pagination from "../Pagination/pagination";
 
 
 import {server_path} from "../../../Constants/serverUrl.js";
-import {pageSize} from "../../../Constants/InterfaceConstants.js";
+import {pageSize,eventTypeList} from "../../../Constants/InterfaceConstants.js";
 
 
 var paperDict = {};
@@ -96,13 +108,16 @@ export default {
       curPackage:{},
       curPaper:{title:"",content:""},
       wordList:[],
-      EventNotExists: true,
+      EventExists: true,
       searchEvent:"",
       eventList:[],
       chosenEvent:-1,
 
       totalSize:0,
-      isSelectShown:false
+      isSelectShown:false,
+      newEventName:"",
+      eventTypeList:eventTypeList.slice(1),
+      option:1
 
     }
   },
@@ -141,13 +156,14 @@ export default {
 
   methods:{
 
-    fetchEvent(pageIndex){
+    fetchEvent(pageIndex,filter=""){
       let defaultParams = {
         topic:this.$parent.topic,
         pageSize:6,           //
         pageIndex:pageIndex,
         orderBy: "freq",
-        desc: true
+        desc: true,
+        filter:""
       };
       this.$http.get(server_path+"/event",
         {
@@ -239,12 +255,56 @@ export default {
     },
 
     filterEvents(){
-
+      this.fetchEvent(1,this.searchEvent);
     },
 
     handlePageClick(page){
       this.fetchEvent(page);
     },
+
+    createEvent(){
+      this.EventExists = false;
+      //ajax部分
+    },
+    cancelCreate(){
+      this.EventExists = true;
+    },
+    exportWords(){
+
+      var sendData = this.wordList
+                            .filter(word=>{return word.checked})
+                            .map(word=>word.word).join(",");
+
+
+      if(this.EventExists){
+        //事件存在，添加词汇
+        this.$http.post(server_path+"/event/word",
+          {
+            topic: this.$parent.topic,
+            id:this.chosenEvent,
+            word:sendData
+          })
+            .then(response=>{
+                console.log("事件词入库成功");
+            },(err)=>{
+                console.log("事件词入库成功");
+            });
+
+      }else{
+          this.$http.post(server_path+"/event",{
+            name:this.newEventName,
+            category: this.option ,
+            wordList: sendData
+          }).then((response)=>{
+              console.log("抽取的事件词入库成功");
+          },(err)=>{
+              console.log("抽取的事件词入库成功");
+          });
+
+      }
+
+
+    }
 
 
 

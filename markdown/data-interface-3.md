@@ -87,7 +87,8 @@ method: "post"
 request body:{
     name:"梦雪事件",
     category:  1,
-    wordList:["test1","test2"]  
+    //wordList:["test1","test2"]
+    wordList:"word1,word2,word3"
 }
 ```
 

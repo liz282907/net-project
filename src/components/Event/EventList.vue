@@ -362,7 +362,7 @@ export default {
         this.$http.get(server_path+"/event/word",
         {
           params:{
-            ids: this.chosenEvents
+            ids: JSON.stringify(this.chosenEvents)
           }
         })
           .then((response)=>{

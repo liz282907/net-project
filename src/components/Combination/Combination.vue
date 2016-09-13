@@ -247,12 +247,17 @@ export default {
 		return tempData;
 	},
 	addtitle:function(){
-		if(this.title_input)
-			this.title_data.push(this.title_input);
+		if(this.title_input){
+			var tempArr = this.title_input.split(",");
+			this.title_data = this.title_data.concat(tempArr);
+		}
 	},
 	addevent:function(){
-		if(this.event_input)
-			this.event_data.push(this.event_input);
+		if(this.event_input){
+			var tempArr = this.event_input.split(",");
+			this.event_data = this.event_data.concat(tempArr);
+		}
+
 	},
 	//deprecated
 	toPYStr:function(){
