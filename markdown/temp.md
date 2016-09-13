@@ -159,3 +159,17 @@
                      <li v-else><a href="#">Menu 2</a></li>
 
                      :class="['has-sub', paperPackage===curPackage?'open':'' ]"
+
+
+                                <ul>
+              <li v-for="keyword in title_data" class="tag">
+                <span class="label">{{keyword}}</span>
+              </li>
+            </ul>
+
+
+                      <ul class="clearfix">
+              <li v-for="keyword in event_data" class="tag">
+                <span class="label">{{keyword}}</span>
+              </li>
+            </ul>

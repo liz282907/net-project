@@ -8,16 +8,15 @@
 					  <h3 class="panel-title">称谓词</h3>
 					</div>
 					<div class="panel-body">
-						<ul>
-							<li v-for="keyword in title_data" class="tag">
-								<span class="label">{{keyword}}</span>
-							</li>
-						</ul>
+						<textarea class="" v-model="temp_title_data" :value="temp_title_data"></textarea>
+
 					</div>
 					<div class="panel_button_container">
-						<button class="btn btn-sm " @click="addtitle">添加</button>
 						<button id="title" class="btn btn-sm" @click="importWord">导入</button>
+						<!--
+						<button class="btn btn-sm " @click="addtitle">添加</button>
 						<input type="text"  v-model="title_input" placeholder="添加">
+						-->
 					</div>
 				</div>
 			</div>
@@ -32,16 +31,16 @@
 					  <h3 class="panel-title">事件词</h3>
 					</div>
 					<div class="panel-body">
-						<ul class="clearfix">
-							<li v-for="keyword in event_data" class="tag">
-								<span class="label">{{keyword}}</span>
-							</li>
-						</ul>
+						<textarea class="" v-model="temp_event_data" :value="temp_event_data"></textarea>
+
 					</div>
 					<div class="panel_button_container">
-						<button class="btn btn-sm" @click="addevent">添加</button>
+
 						<button id="event" class="btn btn-sm" @click="importWord">导入</button>
+						<!--
+						<button class="btn btn-sm" @click="addevent">添加</button>
 						<input type="text" v-model="event_input" placeholder="添加">
+						-->
 					</div>
 				</div>
 			</div>
@@ -130,8 +129,8 @@ export default {
   data () {
     return {
     	topic:this.$parent.topic,
-		title_data:["习近平","习大大"],
-		event_data:["G20","祝寿"],
+//		title_data:["习近平","习大大"],
+//		event_data:["G20","祝寿"],
 		comb_data:[],
 		// fan_comb_data:[],
 		title_input:"",
@@ -153,9 +152,21 @@ export default {
 			jian:1,
 			fan:1
 		},
+
+		temp_title_data:"",
+		temp_event_data:""
+
     }
   },
   computed:{
+
+  	title_data:function(){
+  		return this.temp_title_data.trim().split(/\s+/);
+  	},
+  	event_data:function(){
+  		return this.temp_event_data.trim().split(/\s+/);
+  	},
+
   	comb_data:function(){
 		return this.makecomb();
 	},
@@ -346,7 +357,7 @@ textarea{
 	outline:none;
 	width:100%;
 	height:100%;
-	min-height:100px;
+	min-height:140px;
 	font-size:12px;
 }
 
@@ -434,4 +445,6 @@ textarea{
 	float:right;
 	margin-right:2rem;
 }
+
+
 </style>
