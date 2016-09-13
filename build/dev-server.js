@@ -108,8 +108,22 @@ app.post("/transfer",function(req,res){
 });
 
 app.get("/extract",function(req,res){
-   var paperList = JSON.parse(fs.readFileSync("./mock/paperList.json"));
-    res.json(paperList);
+  //获得下拉菜单的数据
+  console.log("-----------",req.query);
+  switch(req.query.action){
+    case "detail":{
+      var paperContent = JSON.parse(fs.readFileSync("./mock/paperContent.json"));
+      res.json(paperContent);
+      break;
+    }
+    case "pull":{
+      var paperList = JSON.parse(fs.readFileSync("./mock/paperList.json"));
+      res.json(paperList);
+    }
+  }
+  // if(req.body.action=="detail")
+  //  var paperList = JSON.parse(fs.readFileSync("./mock/paperList.json"));
+  //   res.json(paperList);
 });
 
 app.get("/paper/words",function(req,res){
@@ -117,9 +131,12 @@ app.get("/paper/words",function(req,res){
     res.json(wordList);
 });
 
+//deprecated
 app.post("/extract",function(req,res){
-    var content = JSON.parse(fs.readFileSync("./mock/paperContent.json"));
-    res.json(content);
+    // var content = JSON.parse(fs.readFileSync("./mock/paperContent.json"));
+    // res.json(content);
+    var wordList = JSON.parse(fs.readFileSync("./mock/event_wordList.json"));
+      res.json(wordList);
 });
 
 

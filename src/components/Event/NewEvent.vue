@@ -34,10 +34,11 @@
 import {server_path} from "../../../Constants/serverUrl.js";
 import {eventTypeList} from "../../../Constants/InterfaceConstants.js";
 
+if(eventTypeList[0].name == "全部")
+	eventTypeList.shift();
 
 export default {
   data () {
-	eventTypeList.shift();
     return {
 		eventTypeList:eventTypeList,
 		option:0,
@@ -72,6 +73,7 @@ export default {
 	}
   }
 }
+
 
 </script>
 

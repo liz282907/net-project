@@ -198,9 +198,11 @@ export default {
 
     //有可能在hover部分
     fetchPaper(title){
-      this.$http.post(server_path+"/extract",{
+      this.$http.get(server_path+"/extract",{
+        params:{
           action:"detail",
           title:title
+        }
       })
           .then(function(response){
             //loading 层
@@ -233,7 +235,14 @@ export default {
     },
 
     extractWords(){
-      this.$http.get(server_path+"/paper/words")
+      //this.$http.get(server_path+"/paper/words",{
+      this.$http.post(server_path+"/extract",{
+        params:{
+          action:"extract",
+          title:this.curPaper.title,
+          content:this.curPaper.content
+        }
+      })
           .then((response)=>{
             this.wordList = response.json().wordList.map(word=>{
               return {

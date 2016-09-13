@@ -27,11 +27,16 @@ export default {
     };
   },
   computed: {},
-  ready() {},
+  ready() {
+    this.$parent.topic = '';
+    window.localStorage.removeItem('theme');
+  },
   attached() {},
   methods: {
     choseTheme: function(index){
       this.$parent.topic = this.themes[index].name;
+      this.$parent.changeActive(1);
+      window.localStorage.setItem('theme', this.themes[index].name);
     }
   },
   components: {}

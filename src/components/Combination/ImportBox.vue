@@ -56,12 +56,14 @@ export default {
 		import_onclick:function(){
 			for(var i=0;i<this.checkbox.sub.length;i++){
 				if(this.$parent.whichData == "title"){
-					if(!isIn(this.$parent.title_data,this.checkbox.sub[i]))
-						this.$parent.title_data.push(this.checkbox.sub[i]);
+					if(!isIn(this.$parent.temp_title_data,this.checkbox.sub[i]))
+						//this.$parent.title_data.push(this.checkbox.sub[i]);
+						this.$parent.temp_title_data = this.$parent.temp_title_data + this.checkbox.sub[i] + " ";
 				}
 				else{
 					if(!isIn(this.$parent.event_data,this.checkbox.sub[i]))
-						this.$parent.event_data.push(this.checkbox.sub[i]);
+						//this.$parent.event_data.push(this.checkbox.sub[i]);
+						this.$parent.temp_event_data = this.$parent.temp_event_data + this.checkbox.sub[i] + " ";
 				}
 			}
 			this.$parent.s = false;

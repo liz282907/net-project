@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <header class="header-wrapper navbar navbar-default">
+      <header v-if="topic" class="header-wrapper navbar navbar-default">
        <div class="left">
             <div class="logo navbar-header">
               <span class="navbar-brand">关键词</span>
@@ -24,7 +24,8 @@
          </div>
     </header>
   <div class="content">
-          <h4>主题词：{{topic}}</h4>
+          <h4 v-if="topic">主题词：{{topic}}</h4>
+          <h3 v-else>主题选择</h4>
           <router-view></router-view>
   </div>
     <footer class="footer">
@@ -49,7 +50,7 @@ export default {
   data(){
     return {
         navList:[
-          {name:"主题选择",url:"/theme"},
+          {name:"首页",url:"/theme"},
           {name:"称谓词",url:"/title"},
           {name:"事件词",url:"/event"},
           {name:"组合词",url:"/combination"},
@@ -63,9 +64,26 @@ export default {
   },
   methods:{
     changeActive(index){
+      window.localStorage.setItem('curIndex', index);
       this.curIndex = index;
+      if(index===0) {
+           this.topic = '';
+           window.localStorage.removeItem('theme');
+        }
+      },
+    getTopicCache(){
+      this.topic = window.localStorage.getItem('theme');
+    },
+    getCurIndexCache(){
+      this.curIndex = parseInt(window.localStorage.getItem('curIndex'));
     }
   },
+
+  ready() {
+    this.getTopicCache(); // 刷新页面读取从localStorage保存的topic
+    this.getCurIndexCache(); //刷新页面保持active状态
+  }
+
 
 }
 </script>
@@ -79,6 +97,9 @@ html {
   height: 100%;
 }
 
+  h3 {
+  text-align: center;
+}
 body {
   display: flex;
 
