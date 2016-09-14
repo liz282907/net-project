@@ -73,9 +73,9 @@
 				</div>
 				<div class="panel_button_container button-group">
 					<button class="btn btn-sm" @click="exportCombo">导出组合词</button>
-					<button class="btn btn-sm" @click="generateEditData(1,1)">九宫格</button>
+					<!--button class="btn btn-sm" @click="generateEditData(1,1)">九宫格</button>
 					<button class="btn btn-sm" @click="generateEditData(1,2)">计算所</button>
-					<button class="btn btn-sm " @click="generateEditData(1,3)">yjyy</button>
+					<button class="btn btn-sm " @click="generateEditData(1,3)">yjyy</button-->
 				</div>
 			  </div>
 		</div>
@@ -107,9 +107,10 @@
 					</div>
 				</div>
 				<div class="panel_button_container button-group">
-					<button class="btn btn-sm" @click="generateEditData(2,1)">九宫格</button>
+					<button class="btn btn-sm" @click="exportFanCombo">导出繁体组合词</button>
+					<!--button class="btn btn-sm" @click="generateEditData(2,1)">九宫格</button>
 					<button class="btn btn-sm" @click="generateEditData(2,2)">计算所</button>
-					<button class="btn btn-sm " @click="generateEditData(2,3)">yjyy</button>
+					<button class="btn btn-sm " @click="generateEditData(2,3)">yjyy</button-->
 				</div>
 			  </div>
 			</div>

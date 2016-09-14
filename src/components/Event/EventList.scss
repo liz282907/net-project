@@ -108,8 +108,12 @@ $center-margin: 10px;
     float: right;
 }
 
+.form-box{
+    position: relative;
+}
 .togglebtn-wrapper{
     position: absolute;
+    // right: -30px;
     .export{
         margin-left: 14px;
         padding: 0;

@@ -90,6 +90,7 @@ export default {
 				type: this.category,
 				initialWordArr: this.checkbox.sub
 			});
+			this.checkbox.sub = [];
 /*
 			var parentCategory = this.category;
 			var parentDataName = "temp_"+parentCategory+"_data";

@@ -36,7 +36,7 @@
                   <tr><th>序号</th><th>关键词</th><th>敏感度</th><th>搜索量</th><th>命中数</th><th>命中率</th><th>热度趋势</th><th>时间</th><th>相关事件</th><th>传播路径及原文查看</th></tr>
                 </thead>
                 <tbody>
-                    <tr v-for="word in wordList">
+                    <tr v-for="word in transformedWordList">
                         <td>{{word.id}}</td>
                         <td>{{word.name}}</td>
                         <td>{{word.sensitivity}}</td>
@@ -96,6 +96,14 @@ export default {
     },
     rangeList:function(){
       return rangeList;
+    },
+
+    transformedWordList:function(){
+      return this.wordList.map((word)=>{
+        var newHitRate = (new Number(word.hitRate).toFixed(4))*100+"%";
+        var newWord = Object.assign({},word,{hitRate:newHitRate});
+        return newWord;
+      });
     }
   },
 
