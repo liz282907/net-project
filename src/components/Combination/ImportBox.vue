@@ -1,5 +1,6 @@
 <template>
-  <div id="importbox">
+  <div id="importbox" v-show="show">
+
 	<!--头部-->
 	<div id="ib_title">导入数据</div>
 
@@ -34,6 +35,11 @@
 </template>
 
 <script>
+
+var wordDict = {
+	"title":"称谓词",
+	"event":"事件词"
+}
 export default {
 	data(){
 		return {
@@ -46,31 +52,72 @@ export default {
 		}
 	},
 
-	props:["topic"],
+	props:["topic","show","category"],
 
 	ready(){
-		this.search_onclick();
+		//this.search_onclick();
 	},
 
+	events:{
+		"show-import-box":function(category){
+
+			this.search_onclick(category);
+		}
+	},
 	methods:{
+
+		updateParentData(parentStr,arr){
+			var temp = [];
+
+			var parentArr = parentStr.trim()?parentStr.trim().split(/\s+/):[];
+			arr.forEach(function(data){
+						if(!isIn(parentArr,data))
+							temp.push(data);
+					});
+			//parentStr += temp.join(" ");
+			//return parentStr;
+			return temp.join(" ");
+
+		},
+
+
+
+		//点导入按钮
 		import_onclick:function(){
-			for(var i=0;i<this.checkbox.sub.length;i++){
-				if(this.$parent.whichData == "title"){
-					if(!isIn(this.$parent.temp_title_data,this.checkbox.sub[i]))
-						//this.$parent.title_data.push(this.checkbox.sub[i]);
-						this.$parent.temp_title_data = this.$parent.temp_title_data + this.checkbox.sub[i] + " ";
+
+
+			this.$dispatch("on-import-words",{
+				type: this.category,
+				initialWordArr: this.checkbox.sub
+			});
+/*
+			var parentCategory = this.category;
+			var parentDataName = "temp_"+parentCategory+"_data";
+			var parentStr = this.$parent[parentDataName];
+
+
+			parentStr = this.updateParentData(parentStr,this.checkbox.sub);
+			switch(parentCategory){
+				case "title":{
+					this.$parent.temp_title_data = parentStr;
+					break;
 				}
-				else{
-					if(!isIn(this.$parent.event_data,this.checkbox.sub[i]))
-						//this.$parent.event_data.push(this.checkbox.sub[i]);
-						this.$parent.temp_event_data = this.$parent.temp_event_data + this.checkbox.sub[i] + " ";
+				case "event":{
+					this.$parent.temp_event_data = parentStr;
+					break;
 				}
 			}
-			this.$parent.s = false;
+*/
+			this.show = false;
 		},
-		search_onclick:function(){
+		search_onclick:function(broadCategory=""){
+
+			//不清楚这边为什么没有更新props
+			console.log("-------on sow",this.$parent.whichData,"---",this.category);
+
 			var temp_ca = "";
-			this.$parent.whichData == "title" ? temp_ca="称谓词" :temp_ca="事件词";
+
+			temp_ca  = (broadCategory?wordDict[broadCategory]:wordDict[this.category]);
 
 			this.$http.get("/combination",
 				{
@@ -128,11 +175,15 @@ function dataFrame(oldObj){
 }
 
 function isIn(array,element){
+
+	return array.indexOf(element)!==-1;
+	/*
 	for(var i=0;i<array.length;i++){
 		if(array[i] == element)
 			return true;
 	}
 	return false;
+	*/
 }
 
 function deleteInArray(array,element){

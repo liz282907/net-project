@@ -23,7 +23,7 @@ part2:
 
 
 **最近一段时间的高危敏感词***,这部分接口？
-
+已加入 2016/09/14
 ---
 
 ### 二、详细数据接口：part1
@@ -133,6 +133,27 @@ request body:{
 【注】：post包括：增删改，action没有时默认为create，新增词汇
 
 
+四、称谓词最近一段时间高危敏感词的接口
+```
+request:
+    Method: GET
+    URL: <baseurl>/title
+    Interface:
+    {
+        "topic" : "习近平",
+        "category" : "hotwords",
+        "orderBy" : "rank_h"(小时)/"rank_d(天)"/"rank_w"(周),
+        "pageSize" : 10,
+        "pageIndex" : 1 ,
+    }
+    
+response:
+    {
+        "wordList":["习庆丰","刁近平","洗净瓶"...],
+        "totalSize":10    //该字段只有在index=1的时候才有
+    }
+
+```
 
 ---
 update:
@@ -140,6 +161,7 @@ update:
 ```
 totalSize:       //即总页数
 ```
+
 
 
 

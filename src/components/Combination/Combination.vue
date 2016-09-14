@@ -9,13 +9,7 @@
 					</div>
 					<div class="panel-body">
 						<textarea class="" v-model="temp_title_data" :value="temp_title_data"></textarea>
-						<!--
-						<ul class="clearfix">
-			              <li v-for="keyword in event_data" class="tag">
-			                <span class="label">{{keyword}}</span>
-			              </li>
-			            </ul>
-			            -->
+
 					</div>
 					<div class="panel_button_container">
 						<button id="title" class="btn btn-sm" @click="importWord">导入</button>
@@ -58,13 +52,13 @@
 				  <h3 class="panel-title">组合词生成预览</h3>
 				</div>
 				<div class="panel-body" >
-					<ul v-if="notEditing.jian" class="clearfix">
+					<ul v-show="notEditing.jian" class="clearfix">
 						<li v-for="keyword in comb_data" class="tag">
 							<span class="label">{{keyword}}</span>
 						</li>
 					</ul>
 					<div v-else :class="['textarea-wrapper',onePart.jian?'':'two-column' ]" @blur.stop="changeToUl(1)" tabindex="1">
-						<textarea v-if="onePart.jian" >{{transformedData.jian}}</textarea>
+						<textarea v-show="onePart.jian" >{{transformedData.jian}}</textarea>
 						<template v-else >
 							<div >
 								<h4>称谓词</h4>
@@ -91,13 +85,14 @@
 				  <h3 class="panel-title">繁体组合词生成预览</h3>
 				</div>
 				<div class="panel-body" >
-					<ul v-if="notEditing.fan" class="clearfix">
+					<ul v-show="notEditing.fan" class="clearfix">
 						<li v-for="keyword in fan_comb_data" class="tag">
 							<span class="label">{{keyword}}</span>
 						</li>
 					</ul>
 					<div v-else :class="['textarea-wrapper',onePart.fan?'':'two-column' ]" @blur.stop="changeToUl(2)" tabindex="1">
-						<textarea v-if="onePart.fan" >{{transformedFanData}}</textarea>
+
+						<textarea v-show="onePart.fan" >{{transformedFanData}}</textarea>
 						<template v-else >
 							<div >
 								<h4>称谓词</h4>
@@ -120,7 +115,9 @@
 		</div>
 	</div>
   </div>
-  <import-box v-if='s' :topic="topic" v-bind:style="{ top:mouseY+'px',left:mouseX+'px' }"></import-box>
+  <import-box :show.sync = "s" :topic="topic" :category="whichData" v-bind:style="{ top:mouseY+'px',left:mouseX+'px' }"
+  @on-import-words="updateParentData"
+  ></import-box>
 </template>
 
 <script>
@@ -137,7 +134,7 @@ export default {
     	topic:this.$parent.topic,
 //		title_data:["习近平","习大大"],
 //		event_data:["G20","祝寿"],
-		comb_data:[],
+		//comb_data:[],
 		// fan_comb_data:[],
 		title_input:"",
 		event_input:"",
@@ -167,10 +164,12 @@ export default {
   computed:{
 
   	title_data:function(){
-  		return this.temp_title_data.trim().split(/\s+/);
+		var tmp = this.temp_title_data;
+  		return tmp?this.temp_title_data.trim().split(/\s+/):[];
   	},
   	event_data:function(){
-  		return this.temp_event_data.trim().split(/\s+/);
+  		var tmp = this.temp_event_data;
+  		return tmp?this.temp_event_data.trim().split(/\s+/):[];
   	},
 
   	comb_data:function(){
@@ -185,6 +184,7 @@ export default {
 			fan:this.transformType.fan===2?false:true
 		}
 	},
+
 	transformedFanData:function(){
 		switch(this.transformType.fan){
 			case 1:{
@@ -206,7 +206,9 @@ export default {
 			}
 		}
 	},
+
 	transformedData:function(){
+		console.log("------------",this.comb_data);
 		switch(this.transformType.jian){
 			case 1:{
 				return {
@@ -261,6 +263,7 @@ export default {
 				if(!isIn(tempData,temp))
 					tempData.push(temp);
 			}
+		console.log("----------",tempData);
 		return tempData;
 	},
 	addtitle:function(){
@@ -269,6 +272,17 @@ export default {
 			this.title_data = this.title_data.concat(tempArr);
 		}
 	},
+
+	uniqueArr:function(arr)
+	{
+		var temp = [];
+		for(var i = 0; i < arr.length; i++)
+		{
+			if (temp.indexOf(arr[i]) == -1) temp.push(arr[i]);
+		}
+		return temp;
+	},
+
 	addevent:function(){
 		if(this.event_input){
 			var tempArr = this.event_input.split(",");
@@ -284,18 +298,45 @@ export default {
 	},
 
 	toFan:function(arr){
-		return arr.map(word=>{return traditionalized(word);})
+		return this.uniqueArr(arr.map(word=>{return traditionalized(word);}));
 	},
 
+	//根据导入框的数据更新title,eventData
+	updateParentData(receivedData){
 
+		var initialWordArr = receivedData.initialWordArr;
+
+		var parentDataName = "temp_"+receivedData.type+"_data";
+		var parentStr = this[parentDataName];
+		var parentArr = parentStr.trim()?parentStr.trim().split(/\s+/):[];
+
+		var temp = [];
+		initialWordArr.forEach(function(data){
+			if(!isIn(parentArr,data))
+				temp.push(data);
+		});
+
+		if(receivedData.type==="title"){
+			this.temp_title_data += temp.join(" ");
+		}
+		else
+			this.temp_event_data += temp.join(" ");
+	},
 
 	importWord:function(e){
 		this.mouseX = e.clientX;
 		this.mouseY = e.clientY;
-		this.s = !this.s;
-		this.flag = !this.flag;
 
+		this.flag = !this.flag;
 		this.whichData = e.currentTarget.id;
+		console.log("------------",this.whichData);
+		this.s = !this.s;
+		this.$broadcast("show-import-box",this.whichData);
+
+
+
+
+
 	},
 	cancleImportBox:function(){
 		this.flag = !this.flag;

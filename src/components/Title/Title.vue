@@ -84,7 +84,8 @@
 <script>
 
 import Card from "../Card/Card";
-import PopModal from "../PopModal/PopModal";
+
+import {server_path} from "../../../Constants/serverUrl.js";
 
 let checkboxWords = ["high danger","forbidden words","check words","low danger","issued words"];
 let cardList = [
@@ -97,21 +98,20 @@ export default {
 
   components:{
     "card":Card,
-   // "modal":PopModal
   },
 
 
   data () {
 
     let duraionList = [
-        {name:"halfHour",value:0.5,zh_value:"12小时"},
-        {name:"oneDay",value:1,zh_value:"1天"},
-        {name:"oneWeek",value:7,zh_value:"一周"},
+        {name:"halfHour",value:"rank_h",zh_value:"12小时"},
+        {name:"oneDay",value:"rank_d",zh_value:"1天"},
+        {name:"oneWeek",value:"rank_w",zh_value:"一周"},
       ];
     return {
 
       topic: this.$parent.topic,
-      duration:[],
+      duration:"rank_h",
       cardList:cardList,
       duraionList:duraionList,
       childData:{},
@@ -125,7 +125,7 @@ export default {
     "child-wordList":function(msg){
 
         this.childData = Object.assign({},this.childData,msg);
-        console.log("----dispath ",this.childData);
+        console.log("----dispatch ",this.childData);
     }
   },
 
@@ -151,6 +151,25 @@ export default {
         return this.checkedWords.indexOf(word)===-1;
       });
     },
+
+    //高危敏感词
+    fetchAlergicData(){
+      this.$http.get(server_path+"/title",{
+        params:{
+          "topic" : this.$parent.topic,
+          "category" : "hotwords",
+          "orderBy" : this.duration,
+          "pageSize" : 10,
+          "pageIndex" : 1
+        }
+      }).then((response)=>{
+          this.durationWordList = response.json().wordList;
+          this.durationtotalSize = response.json().totalSize;
+          console.log("高危敏感词获取成功");
+      },(err)=>{
+          console.log("高危敏感词获取失败");
+      })
+    }
 
   }
 }

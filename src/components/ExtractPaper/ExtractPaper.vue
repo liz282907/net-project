@@ -217,6 +217,9 @@ export default {
 
     //click事件
     choosePaper(title){
+
+      this.wordList = [];
+
       this.curPaper.title = title;
 
       if(!paperDict[title]){
@@ -224,6 +227,7 @@ export default {
       }
       else
         this.curPaper.content = paperDict[title];
+
         // this.curPaper = {"title":title,"content":paperDict[title]};
     },
 

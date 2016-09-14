@@ -251,8 +251,10 @@ todo 当没有一个选中时,pop,或者shake
 1，模块合并的时候变量冲突？ajax sentRequest?
 2, 模块合并的时候css 冲突？vue中可以通过scope去进行处理，但是其他呢，react中好像没有遇到这种问题
 
-### todo 9月12日
+### todo 9月14日
 1. 称谓词页面数据库
-2. 导出页面的接口
-3. 事件抽取页面的新建
-4.  取消request
+2. 导出页面的接口 
+3. 事件抽取页面的新建                     done
+4.  取消request                            done
+5.  继续把card抽出来，加入radiobutton       
+6.  更换文章后清空抽取词

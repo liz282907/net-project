@@ -173,3 +173,14 @@
                 <span class="label">{{keyword}}</span>
               </li>
             </ul>
+
+
+<!--
+            <ul class="clearfix">
+                    <li v-for="keyword in event_data" class="tag">
+                      <span class="label">{{keyword}}</span>
+                    </li>
+                  </ul>
+                  -->
+
+<textarea class="" v-model="temp_title_data" :value="temp_title_data"></textarea>

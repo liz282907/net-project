@@ -47,21 +47,6 @@ method: "get"
 
 ```
 
-
-
-#### **文章关键词的获取(get)**
-
-#### request
-```
-(1)列表
-url: yoursite.com/#!/paper/words
-method: "post"     ??文章数目，4000chars内？
-request body:{
-     
-}
-```
-
-
 关键词提取页面接口：
 
 1. 获取其他系统的文章：
