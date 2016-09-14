@@ -13,9 +13,11 @@
             <!--
             <li><a href="javascrpt:void(0)">...</a></li>
             <li :class="pageList.slice(-1)[0]>=totalSize?'disabled':''"><a href="javascrpt:void(0)" @click="changePagination(1)">&raquo;</a></li>
+            <li :class="pageList.slice(-1)[0]>=totalSize?'disabled':''"><a href="javascrpt:void(0)" @click="changePagination(1)">&raquo;</a></li>
+
             -->
             <li v-if="!((curPage>=totalSize-1)||(totalSize<5))"><a href="javascrpt:void(0)">...</a></li>
-            <li :class="pageList.slice(-1)[0]>=totalSize?'disabled':''"><a href="javascrpt:void(0)" @click="changePagination(1)">&raquo;</a></li>               <li :class="curPage>=totalSize?'disabled':''"><a href="javascrpt:void(0)" @click="changePagination(1)">&raquo;</a></li>
+            <li :class="curPage>=totalSize?'disabled':''"><a href="javascrpt:void(0)" @click="changePagination(1)">&raquo;</a></li>
         </ul>
         <span class="input-wrapper">转到第
             <input type="number" min="1" :max="totalSize" class="page-input"

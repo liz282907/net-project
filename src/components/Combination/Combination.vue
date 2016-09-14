@@ -72,6 +72,7 @@
 					</div>
 				</div>
 				<div class="panel_button_container button-group">
+					<button class="btn btn-sm" @click="exportCombo">导出组合词</button>
 					<button class="btn btn-sm" @click="generateEditData(1,1)">九宫格</button>
 					<button class="btn btn-sm" @click="generateEditData(1,2)">计算所</button>
 					<button class="btn btn-sm " @click="generateEditData(1,3)">yjyy</button>
@@ -118,10 +119,33 @@
   <import-box :show.sync = "s" :topic="topic" :category="whichData" v-bind:style="{ top:mouseY+'px',left:mouseX+'px' }"
   @on-import-words="updateParentData"
   ></import-box>
+
+  <exportbox v-if="export_jian" title="导出组合词"
+  	:word-list= "comb_data"
+    :title-list="title_data.join(' ')"
+    :event-list="event_data.join(' ')"
+    :show.sync="showExportBox"
+    :package-list.sync = "packageList"
+    @export-to-sys = "exportToSys"></exportbox>
+
+  <exportbox v-else title="导出繁体组合词"
+    :word-list= "fan_comb_data"
+    :title-list="toFan(title_data).join(' ')"
+    :event-list="toFan(event_data).join(' ')"
+    :show.sync="showExportBox"
+    :package-list.sync = "packageList"
+    @export-to-sys = "exportToSys"></exportbox>
+
+
+
 </template>
 
 <script>
-import ImportBox from './ImportBox.vue'
+import ImportBox from './ImportBox.vue';
+import ExportBox from '../ExportBox/ExportBox';
+import {server_path} from "../../../Constants/serverUrl.js";
+let sentWordRequest = {"get":null,"update":null,"delete":null,"patch":null};
+
 
 function isIn(array,element){
 
@@ -132,10 +156,6 @@ export default {
   data () {
     return {
     	topic:this.$parent.topic,
-//		title_data:["习近平","习大大"],
-//		event_data:["G20","祝寿"],
-		//comb_data:[],
-		// fan_comb_data:[],
 		title_input:"",
 		event_input:"",
 		s:false,
@@ -157,10 +177,17 @@ export default {
 		},
 
 		temp_title_data:"",
-		temp_event_data:""
+		temp_event_data:"",
+
+		//yezi
+		showExportBox:false,
+        comboWordList:[],
+        packageList:[],
+        export_jian:false,
 
     }
   },
+
   computed:{
 
   	title_data:function(){
@@ -251,9 +278,66 @@ export default {
 
   },
   components: {
-    ImportBox
+    ImportBox,
+    "exportbox": ExportBox
   },
   methods:{
+
+  	//yezi
+  	exportCombo:function(){
+        this.export_jian = true;
+        this.showExportBox = !this.showExportBox;
+        this.fetchPackageData();
+    },
+    //yezi
+    exportFanCombo:function(){
+        this.export_jian = false;
+        this.showExportBox = !this.showExportBox;
+        this.fetchPackageData();
+    },
+    //yezi
+    exportToSys(data){
+        console.log("--------topic",this.topic);
+	        var postBody = Object.assign({},data,{
+	        action:"push",
+	        topic:this.topic
+	    });
+	    this.$http.post(server_path+"/transfer",postBody)
+	     .then(response=>{
+	          alert('推送到系统成功');
+	          console.log("推送到系统成功");
+	      },(err)=>{
+	          alert('推送到系统失败');
+	          console.log("推送到系统失败");
+	      });
+    },
+    //yezi
+    fetchPackageData(){
+        this.$http.get(server_path+"/theme",
+            {
+            params:{
+              topic : this.topic,
+              value : "package"
+            },
+            before(request){
+              if(sentWordRequest["get"]){
+                sentWordRequest["get"].abort();
+              }
+              sentWordRequest["get"] =request;
+            }
+        })
+        .then((response)=>{
+          console.log("packages",response.json().packages);
+            this.packageList = response.json().packages;
+        },(err)=>{
+            console.log("请求服务器失败");
+        });
+    },
+
+
+
+
+
   	//comb_data
 	makecomb:function(){
 		var tempData = [];

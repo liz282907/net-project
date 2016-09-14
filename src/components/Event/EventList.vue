@@ -76,6 +76,7 @@
     		@on-word-create="handleWordCreate"></dialog>
     <exportbox title="导出事件词"
       :word-list= "eventWordList"
+      :event-list="eventWordList"
       :show.sync="showExportBox"
       :package-list.sync = "packageList"
       @export-to-sys = "exportToSys"></exportbox>
@@ -119,7 +120,10 @@ export default {
       isEditing:false,
       chosenEvents:[],
       eventWordList:[],
-      packageList:[]
+      packageList:[],
+
+      //yezi
+      totalSizeList:[]
     }
   },
   components:{
@@ -359,6 +363,7 @@ export default {
       //   this.resetExportData();
         // this.fetchPackageData();
         console.log("this.chosenevents",this.chosenEvents);
+        /*
         this.$http.get(server_path+"/event/word",
         {
           params:{
@@ -370,6 +375,23 @@ export default {
           },(err)=>{
               console.log("请求服务器失败");
           });
+          */
+        this.eventWordList = [];
+        for(var i=0; i<this.chosenEvents.length; i++){
+            this.$http.get(server_path+"/event/word",{
+                params:{
+                    id: this.chosenEvents[i],
+                    category: this.category,
+                    pageIndex: 1,
+                    pageSize: 10000000
+                }
+            })
+            .then((response)=>{
+                this.eventWordList = this.eventWordList.concat(response.json().wordList);
+            },(err)=>{
+                console.log('读取数据失败'+err);
+            });
+        }
 
     },
 

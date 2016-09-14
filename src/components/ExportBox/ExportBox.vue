@@ -37,7 +37,27 @@
                       <label >计算所</label>
                     </div>
               </div>
-              <textarea class="textarea">{{transformedData}}</textarea>
+
+
+              <textarea class="textarea" v-if="combType!='jss'">{{transformedData}}</textarea>
+              <div class="jss_container" v-else>
+                <div class="title_container">
+                  称谓词
+                  <textarea>{{titleList}}</textarea>
+                </div>
+                <div class="event_container">
+                  事件词
+                  <textarea>{{eventList}}</textarea>
+                </div>
+              </div>
+
+              <!--
+                  yezi
+                  <textarea class="textarea">{{transformedData}}</textarea>
+              -->
+
+
+
               <ul class="dropdown-group clearfix">
                   <li class="dropdown"  >
                       <div class="dropdown-left" tabindex="0">
@@ -52,6 +72,7 @@
                       </div>
                       <button v-show="isChoosingSys" @click="exportToSys">导出</button>
 
+
                   </li>
 
                   <li class="dropdown" >
@@ -65,7 +86,7 @@
                         </li>
                       </ul>
                     </div>
-                    <button v-show="isChoosingFile">导出</button>
+                    <a v-show="isChoosingFile" @click="exportToFile" :href="download_data" :download="download_filename">导出</a>
                   </li>
 
 
@@ -93,7 +114,7 @@ export default {
 
   name:"ExportBox",
 
-  props:["title","show","packageList","wordList"],
+  props:["title","show","packageList","wordList","titleList","eventList"],
 
   data () {
 
@@ -105,7 +126,12 @@ export default {
       chosenSysType:{},
       chosenPackage:"",
       transformedData:"",
-      keyPackage:""
+      keyPackage:"",
+
+      //yezi
+      topic: this.$parent.topic,
+      download_data:"",
+      download_filename:""
 
     }
   },
@@ -165,6 +191,20 @@ export default {
     addPackage(){
       this.packageList.push(this.keyPackage);
       console.log("添加成功",this.packageList);
+
+      //yezi
+      this.$http.post(server_path+"/theme",{
+          package: this.keyPackage,
+          topic: this.topic
+        })
+          .then(response=>{
+            //this.packageList.push(this.keyPackage);
+            console.log("添加成功",this.packageList);
+          },(err)=>{
+            console.log("添加失败",err);
+          });
+
+
     },
     exportToSys(){
       var data = {
@@ -173,15 +213,41 @@ export default {
         wordList:this.wordList
       };
 
+      //yezi
+      if(!this.chosenPackage[0]){
+        console.log(!this.chosenPackage[0]);
+        alert('请选择一个关键词包');
+        return;
+      }
+
       this.chosenSysType = {};
       this.$dispatch("export-to-sys",data);
+      //yezi
+      this.chosenPackage[0] = '';
+
+
     },
+    //yezi
     exportToFile(){
       var data = {
-        content:this.transformedData
+        content:this.transformedData,
+        title_content:this.titleList,
+        event_content:this.eventList
       };
       this.chosenFileType = "",
+
       this.$dispatch("export-to-file",data);
+
+      var content = '';
+        if(this.combType==='jss'){
+          content = encodeURIComponent("称谓词\r" + data['title_content'] + "\r" + "事件词\r" + data['event_content']);
+        }else{
+          content = encodeURIComponent(data['content']);
+        }
+        this.download_data = 'data:text/plain;UTF-8,'+ content;
+        this.download_filename = this.combType+'.txt';
+
+
     }
 
 
@@ -192,4 +258,18 @@ export default {
 
 <style lang="scss" scoped>
 @import "./ExportBox.scss";
+
+.jss_container{
+  text-align: center;
+  > div{
+    float: left;
+    width: 50%;
+  }
+}
+textarea{
+  border: 1px solid #eee;
+  resize: none;
+  // word-wrap: normal;
+}
+
 </style>

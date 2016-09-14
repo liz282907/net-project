@@ -1,12 +1,13 @@
 <template>
   <div class="global-actions clearfix" >
 
-
+<!--
       <div class="btn-group btn-group-justified file-btn-group">
         <a href="#" class="btn btn-default">批量导入</a>
         <a href="#" class="btn btn-default">批量导出</a>
         <a href="#" class="btn btn-default">批量删除</a>
       </div>
+-->
 
 
   </div>
@@ -89,9 +90,9 @@ import {server_path} from "../../../Constants/serverUrl.js";
 
 let checkboxWords = ["high danger","forbidden words","check words","low danger","issued words"];
 let cardList = [
-  {title:"禁发",category:"forbidden words"},
-  {title:"审核",category:"check words"},
-  {title:"低危",category:"low danger"},
+  {title:"禁发词",category:"forbidden words"},
+  {title:"审核词",category:"check words"},
+  {title:"事件通配词",category:"low danger"},
 ];
 
 export default {
