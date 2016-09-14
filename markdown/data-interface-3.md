@@ -258,3 +258,6 @@ todo 当没有一个选中时,pop,或者shake
 4.  取消request                            done
 5.  继续把card抽出来，加入radiobutton       
 6.  更换文章后清空抽取词
+7.  拆折 的显示
+8.  loading层
+9.  固定高度

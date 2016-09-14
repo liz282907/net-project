@@ -1,10 +1,23 @@
 <template>
   <div class="mycontainer clearfix">
       <ul class="my-left">
+          <!--
           <li :class="['has-sub', paperPackage===curPackage?'open':'' ]"
             v-for="paperPackage in paperPackages"
             @click="toggleOpen(paperPackage)">
-             <a class="has-sub-li" tabindex="1">{{paperPackage.system}}</a>
+            <a class="has-sub-li" tabindex="1">{{paperPackage.system}}</a>
+          -->
+
+          <li :class="['has-sub', 'open']"
+            v-for="paperPackage in paperPackages">
+            <!--
+              <a class="has-sub-li" tabindex="1">{{paperPackage.system}}</a>
+              -->
+             <a class="has-sub" tabindex="1">{{paperPackage.system}}</a>
+
+
+
+
               <ul class="sub-menu">
                 <li v-for="title in paperPackage.titles" @click.prevent.stop="choosePaper(title)">
                     <a v-show="title==(curPaper.title)"  href="javascript:void(0)"
@@ -58,7 +71,6 @@
                                 <pagination :total-size="totalSize" @page-click="handlePageClick"></pagination>
                             </div>
                             <div class="divider"></div>
-                            <button class="create-btn"></button>
 
                         </div>
 
@@ -77,7 +89,7 @@
 
 
               </div>
-              <button class="export-btn" @click="exportWords">导出</button>
+              <button class="export-btn extract-btn" @click="exportWords">导出</button>
 
           </div>
       </div>
@@ -104,6 +116,14 @@ export default {
   data () {
 
     return {
+
+      paperPackages:[{"titles":["","","","","","","","","","",""],"system":"文章标题"}],
+      //curPackage:{},
+      //paperPackages:[],
+      openPackage:[],
+
+
+
       paperPackages:[],
       curPackage:{},
       curPaper:{title:"",content:""},
@@ -123,6 +143,12 @@ export default {
   },
 
   computed:{
+
+    openPackage:function(){
+      return this.paperPackages;
+    },
+
+
     chooseAll:{
       get:function(){
         return this.wordList.every(word=>{
