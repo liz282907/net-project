@@ -21,11 +21,11 @@
 				</div>
 			</div>
 
-			<div class="p3_word_button_container">
+			<!--div class="p3_word_button_container">
 				<button class="btn btn-default" @click="makecomb">生成组合词</button>
-			</div>
+			</div-->
 
-			<div id="event_word" class="p3_word_container clearfix">
+			<div id="event_word" class="p3_word_container float-right clearfix">
 				<div class="panel_own panel-success">
 					<div class="panel-heading">
 					  <h3 class="panel-title">事件词</h3>
@@ -530,7 +530,7 @@ textarea{
 
 .p3_word_container{
 	float:left;
-	width:45%;
+	width:48%;
 	height:100%;
 }
 
@@ -576,6 +576,10 @@ textarea{
 .float_right{
 	float:right;
 	margin-right:2rem;
+}
+
+.float-right{
+	float:right;
 }
 
 
