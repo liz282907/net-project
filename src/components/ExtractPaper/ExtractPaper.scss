@@ -1,4 +1,4 @@
-@import "../../assets/stylesheets/variables.scss";
+	@import "../../assets/stylesheets/variables.scss";
 $form-width:400px;
 
 
@@ -194,6 +194,7 @@ $center-margin: 10px;
     .export-btn{
       border-left: 2px dashed #F1EBEB;
       width: 200px;
+	  height:100px;
     }
 }
 .select-input{

@@ -85,7 +85,7 @@
                           </option>
                       </select>
                   </div>
-                  <button style="float:right" @click="cancelCreate" v-show="!EventExists">取消</button>
+                  <button class="extract-btn" style="float:right" @click="cancelCreate" v-show="!EventExists">取消</button>
 
 
               </div>
