@@ -30,8 +30,8 @@
           </div>
           <div class="keywords">
             <ul>
-            <li v-for="keyword in highDanger" class="tag">
-                <span class="label">{{keyword}}</span>
+            <li v-for="keyword in durationWordList" class="tag">
+                <span class="label label-default">{{keyword}}</span>
             </li>
             </ul>
             <button class="more">查看详情</button>
@@ -115,6 +115,7 @@ export default {
       duration:"rank_h",
       cardList:cardList,
       duraionList:duraionList,
+      durationWordList:[],
       childData:{},
 
       checkedWords:[], //多选框结果
@@ -134,7 +135,7 @@ export default {
   ready () {
 
     //留作高危敏感词的接口
-
+    this.fetchAlergicData();
 
     },
 
