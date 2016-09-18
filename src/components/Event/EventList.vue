@@ -43,7 +43,8 @@
                     	<td v-else>
                     		<input type="checkbox" :value="event.id" v-model="chosenEvents"/>
                     	</td>
-                      <td class="edit-column">{{event.name}}<i class="edit-img">&#x270e;</i>
+                      <td class="edit-column">{{event.name}}
+                          <i class="edit-img" @click="editEvent(event)">&#x270e;</i>
                         </td>
                         <td>
                         	<ul>
@@ -74,12 +75,19 @@
     <dialog :category="category" :title="curEvent"
     		:show.sync="showCreateModal"
     		@on-word-create="handleWordCreate"></dialog>
+
     <exportbox title="导出事件词"
       :word-list= "eventWordList"
       :event-list="eventWordList"
       :show.sync="showExportBox"
       :package-list.sync = "packageList"
       @export-to-sys = "exportToSys"></exportbox>
+
+    <eventeditmodal :cur-event="curEventObj"
+        :show.sync="showEditModal"
+        @on-event-edited="handleEventEdited"></eventeditmodal>
+
+
 
 
 
@@ -91,6 +99,7 @@ import Search from "../Search/Search";
 import Pagination from "../Pagination/pagination";
 import PopModal from "../PopModal/PopModal";
 import PopDialog from "../PopDialog/PopDialog";
+import PopEventCreate from "../PopEventCreate/PopEventCreate";
 import ToggleButton from "../ToggleButton/ToggleButton";
 import ExportBox from "../ExportBox/ExportBox";
 
@@ -107,11 +116,13 @@ export default {
       topic: this.$parent.topic,
       eventTypeList:eventTypeList,
       order:"freq",
-      option:0,
+      option:eventTypeList[0].id,
       eventList:[],
       totalSize:0,
       showModal:false,
       showCreateModal:false,
+
+      showEditModal:false,
       showExportBox:false,
       wordTotalSize:0,
       wordList:[],
@@ -121,6 +132,8 @@ export default {
       chosenEvents:[],
       eventWordList:[],
       packageList:[],
+
+      curEventObj:{},
 
       //yezi
       totalSizeList:[]
@@ -132,7 +145,8 @@ export default {
     "modal":PopModal,
     "dialog":PopDialog,
     "togglebtn":ToggleButton,
-    "exportbox":ExportBox
+    "exportbox":ExportBox,
+    "eventeditmodal":PopEventCreate
   },
   ready(){
   		this.fetchData((response)=>{
@@ -306,9 +320,20 @@ export default {
   		},{pageIndex:page});
     },
 
+    handleEventEdited(){
+
+    },
+
+    editEvent(event){
+      this.curEventObj = Object.assign({},event,{type:this.option});
+      this.showEditModal = true;
+    },
+
     showDetail(event){
     	this.curId = event.id;
     	this.curEvent = event.name;
+      this.curEventObj = event;
+
       	this.showModal = true;
       	this.handleWordPageClick({pageIndex:1});
 
@@ -317,6 +342,8 @@ export default {
     addWord(event){
     	this.curId = event.id;
     	this.curEvent = event.name;
+
+      this.curEventObj = event;
       	this.showCreateModal = true;
     },
 

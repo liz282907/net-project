@@ -34,14 +34,14 @@
 import {server_path} from "../../../Constants/serverUrl.js";
 import {eventTypeList} from "../../../Constants/InterfaceConstants.js";
 
-if(eventTypeList[0].name == "全部")
-	eventTypeList.shift();
+//if(eventTypeList[0].name == "全部")
+//	eventTypeList.shift();
 
 export default {
   data () {
     return {
-		eventTypeList:eventTypeList,
-		option:0,
+		eventTypeList:eventTypeList.slice(1),
+		option:1,
 		eventname:"",
 		keyword:"",
     }
