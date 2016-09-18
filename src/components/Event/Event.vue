@@ -28,7 +28,7 @@ export default {
       console.log("choice---",choice);
       this.isA = (choice=='A'?true:false);
 	  
-	  window.location.href = choice=='A'?'#!/event/list':'#!/event/create';
+	  //window.location.href = choice=='A'?'#!/event/list':'#!/event/create';
     }
   }
 }
