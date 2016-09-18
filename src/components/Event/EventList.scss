@@ -97,7 +97,12 @@ $center-margin: 10px;
         background-color: $base-color;
         color: white;
     }
-    tr:hover {background-color: $table-hover}
+    tr:hover {
+        background-color: $table-hover;
+        .edit-img{
+            display: inline-block;
+        }
+    }
     tr:nth-child(even){background-color: $table-even}
     th:nth-child(1),td:nth-child(1){width: 10%;}
     th:nth-child(1),th:nth-child(2){border-right: 1px solid #fff;}
@@ -119,6 +124,19 @@ $center-margin: 10px;
         padding: 0;
     }
 
+}
+
+.edit-column{
+    position: relative;
+}
+.edit-img{
+    display: none;
+    position: absolute;
+    right: 10%;
+    top: 50%;
+    margin-left: 20px;
+    transform:translateY(-50%);
+    cursor: pointer;
 }
 
 

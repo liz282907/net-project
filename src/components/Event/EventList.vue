@@ -43,7 +43,7 @@
                     	<td v-else>
                     		<input type="checkbox" :value="event.id" v-model="chosenEvents"/>
                     	</td>
-                        <td>{{event.name}}
+                      <td class="edit-column">{{event.name}}<i class="edit-img">&#x270e;</i>
                         </td>
                         <td>
                         	<ul>
