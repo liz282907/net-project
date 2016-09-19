@@ -184,3 +184,9 @@
                   -->
 
 <textarea class="" v-model="temp_title_data" :value="temp_title_data"></textarea>
+
+
+        <div class="togglebtn-wrapper">
+          <togglebtn @toggle-edit="toggleTableToEdit" ></togglebtn>
+          <button v-show="isEditing" class="export" @click="exportWords">导出</button>
+        </div>

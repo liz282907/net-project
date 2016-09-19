@@ -93,6 +93,35 @@ request body:{
 ```
 
 
+#### **事件的修改**
+
+```
+URL: <baseurl>/event
+Method: POST
+
+request:
+{
+    action : "patch"
+    name : "xxx"    //原来的事件名，用于标识唯一的事件
+    newName : "xxxx"    //新的事件名 (如果用户没有修改则保持不变)
+    newcategory : 2    //新的事件类型 (如果用户没有修改则保持不变)
+}
+
+```
+
+2. 事件的删除
+```
+URL: <baseurl>/event
+Method: POST
+
+request:
+{
+    action : "delete"
+    eventList : ["xxx",....]
+}
+
+```
+
 ### 三、详细数据接口：part2:某个事件的某个词的增删改查
 
 #### 更新（update）
@@ -263,3 +292,4 @@ todo 当没有一个选中时,pop,或者shake
 9.  固定高度
 10.  导出按钮的位置  
 11.  wordList一个对象数组，如何只修改每个对象的部分属性
+12.  子组件用父组件的props进行初始化，但是不奏效

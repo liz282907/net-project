@@ -8,6 +8,7 @@ var webpackConfig = process.env.NODE_ENV === 'testing'
   : require('./webpack.dev.conf')
 
 var fs = require("fs");
+var bodyParser = require('body-parser')
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
@@ -17,6 +18,11 @@ var proxyTable = config.dev.proxyTable
 
 var app = express()
 var compiler = webpack(webpackConfig)
+
+// app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+var jsonParser = bodyParser.json()
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
@@ -83,9 +89,30 @@ app.get("/event",function(req,res){
     res.json(eventWords);
 });
 
-app.post("/event",function(req,res){
-   var titleWords = JSON.stringify({"msg":"success"});
-    res.json(titleWords);
+// app.post("/event",function(req,res){
+//    var titleWords = JSON.stringify({"msg":"success"});
+//     res.json(titleWords);
+// });
+
+app.post("/event",jsonParser,function(req,res){
+   console.log("------------req",req);
+  if(!req.body.action){
+    res.json(JSON.stringify({"msg":"事件创建成功success"}));
+    return;
+  }
+
+  switch(req.body.action){
+    case "delete":{
+      var titleWords = JSON.stringify({"msg":"事件删除成功success"});
+      res.json(titleWords);
+      break;
+    }
+    case "patch":{
+      var titleWords = JSON.stringify({"msg":"事件修改成功success"});
+      res.json(titleWords);
+      break;
+    }
+  }
 });
 
 app.get("/event/word",function(req,res){

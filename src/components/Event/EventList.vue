@@ -1,6 +1,17 @@
 <template>
 
-    <div class="form-box clearfix">
+  <div class="event-header clearfix">
+       <div class="left-part">
+            <div class="togglebtn-wrapper">
+              <togglebtn @toggle-edit="toggleTableToEdit" ></togglebtn>
+              <button v-show="isEditing" class="export" @click="exportWords">导出</button>
+              <button v-show="isEditing" class="export" @click="deleteEvents">删除</button>
+            </div>
+          </div>
+
+
+
+    <div class="form-box clearfix right-part">
           <div class="dropdown form-item">
               <label>搜索事件类型</label>
               <select class="select" id="select" v-model="option" @change="changeOption">
@@ -25,11 +36,9 @@
         <div class="search-wrapper form-item">
           	<search placeholder="搜索" @child-search-change='changeOption'></search>
         </div>
-        <div class="togglebtn-wrapper">
-	    	<togglebtn @toggle-edit="toggleTableToEdit" ></togglebtn>
-	    	<button v-show="isEditing" class="export" @click="exportWords">导出</button>
-	    </div>
 
+
+    </div>
     </div>
 
     <div class="table-wrapper">
@@ -320,7 +329,23 @@ export default {
   		},{pageIndex:page});
     },
 
-    handleEventEdited(){
+    handleEventEdited(data){
+        //直接更新
+        var temp = Object.assign({},this.eventList);
+        this.eventList = this.eventList.map(event=>{
+          if(event.name==data.name)
+            return Object.assign({},event,{name:data.newName});
+          else return event;
+        });
+
+        //发送请求
+        this.$http.post(server_path+"/event",data).then((response)=>{
+          console.log("事件修改成功");
+        },(err)=>{
+          //修改失败后回退
+          this.eventList = temp;
+          console.log("事件修改失败");
+        });
 
     },
 
@@ -377,6 +402,32 @@ export default {
     resetExportData(){
       this.eventWordList = [];
       this.packageList = [];
+    },
+
+    //这边后来改了接口，id,name均可以为主键，但是最开始的时候绑的是id
+    deleteEvents(){
+      if(this.chosenEvents.length<=0)
+          return;
+
+      var eventNames = [];
+      this.eventList.filter(event=>{
+        return this.chosenEvents.indexOf(event.id)!==-1;
+      }).forEach(event=>{
+        eventNames.push(event.name);
+        this.eventList.$remove(event);
+      });
+
+      //从列表里面删除
+
+      //发送请求
+      this.$http.post(server_path+"/event",{
+          action:"delete",
+          eventList: eventNames
+        }).then((response)=>{
+          console.log("删除事件成功");
+        },(err)=>{
+          console.log("删除事件失败");
+        });
     },
 
     exportWords(){

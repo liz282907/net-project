@@ -13,8 +13,8 @@
             <input type="text" class="modal-input" v-model="content" :value="curEvent.name"/>
             <label class="label-tooltip">事件类型
             </label>
-            <select class="select" v-model="option">
-                <option v-for="eventType in eventTypeList" :value="eventType.id" >
+            <select class="select" v-model="option" :value="curEvent.type">
+                <option v-for="eventType in eventTypeList" :value="eventType.id">
                     {{eventType.name}}
                 </option>
             </select>
@@ -31,7 +31,7 @@
 
 <script>
 
-//import {server_path} from "../../../Constants/serverUrl.js";
+import {server_path} from "../../../Constants/serverUrl.js";
 import {eventTypeList} from "../../../Constants/InterfaceConstants.js";
 
 //let sentRequest = {"get":null,"update":null,"delete":null,"patch":null};
@@ -45,13 +45,24 @@ export default {
   data () {
 
     return {
-      eventTypeList:eventTypeList,
+      eventTypeList:eventTypeList.slice(1),
       option: this.curEvent.type,
       content: ""
 
       }
 
   },
+
+  // computed:{
+  //   option:{
+  //     get: function(){
+  //       return this.curEvent.type;
+  //     },
+  //     set:function(type){
+
+  //     }
+  //   }
+  // }
 
   methods:{
 
@@ -62,7 +73,23 @@ export default {
 
     updateEvent(){
       //this.$dispatch("on-event-edited",this.content);
-      this.closeModal();
+      if(this.curEvent.name== this.content && this.curEvent.type==this.option){
+        console.log("------事件没有变更");
+        this.closeModal();
+      }
+      else{
+
+        var postBody = {
+          action : "patch",
+          name : this.curEvent.name,
+          newName : this.content,  //新的事件名 (如果用户没有修改则保持不变)
+          newcategory : this.option    //新的事件类型 (如果用户没有修改则保持不变)
+        };
+        this.$dispatch("on-event-edited",postBody);
+        this.closeModal();
+      }
+
+
     },
 
 
